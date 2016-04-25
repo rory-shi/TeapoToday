@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     private ArrayList<Integer> mDataset;
     private String[] mDateSet = {"4月13日\n三月初七","4月12日\n三月初六","4月11日\n三月初五","4月10日\n三月初四","4月9日\n三月初三","4月8日\n三月初二","4月7日\n三月初一","4月6日\n二月廿九",};
     public static int HELLO_ITEM_HEIGHT = 335;
-    Context mContext;
+    private Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -30,26 +32,35 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         // each data item is just a string in this case
         public CardView mCardView;
         public IMyViewHolderClicks mListener;
-        ImageView ivFavorite;
+        private ImageView ivFavorite;
+        private ImageView ivInCardView;
 
         public ViewHolder(CardView v,IMyViewHolderClicks listener) {
             super(v);
             mListener = listener;
             mCardView = v;
-             ivFavorite = (ImageView) v.findViewById(R.id.fav_in_cv);
+            ivFavorite = (ImageView) v.findViewById(R.id.fav_in_cv);
             ivFavorite.setOnClickListener(this);
-            v.setOnClickListener(this);
+            ivInCardView = (ImageView) v.findViewById(R.id.iv_in_cv);
+            ivInCardView.setOnClickListener(this);
+            //v.setOnClickListener(this);
         }
         @Override
         public void onClick(View v) {
-            if (v instanceof ImageView) {
-                mListener.onFavImgClicked((ImageView) v);
+            switch (v.getId()) {
+                case R.id.fav_in_cv:
+                    mListener.onFavImgClicked(v);
+                    break;
+                default:
+                case R.id.iv_in_cv:
+                    mListener.onImgClicked(v);
+                    break;
             }
         }
 
         public static interface IMyViewHolderClicks {
             public void onFavImgClicked(View caller);
-            public void onImgClicked(ImageView callerImage);
+            public void onImgClicked(View caller);
         }
     }
 
@@ -76,7 +87,10 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             }
 
             @Override
-            public void onImgClicked(ImageView callerImage) {
+            public void onImgClicked(View caller) {
+                Log.e("mytag","onimg clicked");
+                Intent intent = new Intent(mContext, ContentActivity.class);
+                mContext.startActivity(intent);
             }
         });
         return vh;

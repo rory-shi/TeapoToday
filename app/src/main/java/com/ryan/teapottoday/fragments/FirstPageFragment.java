@@ -100,7 +100,7 @@ public class FirstPageFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         // specify an adapter (see also next example)
-        mRVAdapter = new FirstPageRecyclerViewAdapter(myDataset);
+        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),myDataset);
         mRecyclerView.setAdapter(mRVAdapter);
 
         mSrl.setColorSchemeColors(R.color.colorPrimary);
