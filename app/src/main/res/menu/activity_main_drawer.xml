@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_first_page"
+            android:icon="@drawable/ic_menu_today"
+            android:title="每日一壶" />
+        <item
+            android:id="@+id/nav_collection"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="收藏" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_menu_history"
+            android:title="历史" />
+        <item
+            android:id="@+id/nav_production"
+            android:icon="@drawable/ic_menu_production"
+            android:title="制作方式" />
+
+    </group>
+
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/nav_set"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="设置" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_about_us"
+                android:title="关于" />
+        </menu>
+    </item>
+
+</menu>
