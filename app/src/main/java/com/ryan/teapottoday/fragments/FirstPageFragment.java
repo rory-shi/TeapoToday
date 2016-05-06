@@ -11,33 +11,47 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.FirstPageRecyclerViewAdapter;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by rory9 on 2016/4/6.
  */
 public class FirstPageFragment extends Fragment {
 
+    public static String TAG = "FirstPageFragmentTAG";
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mRVAdapter;
     private LinearLayoutManager mLayoutManager;
-    private ArrayList<Integer> myDataset;
+    private ArrayList<String> myDataset;
 
     private SwipeRefreshLayout mSrl;
     private ImageView mImageView;
@@ -110,7 +124,8 @@ public class FirstPageFragment extends Fragment {
         mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                receiveJsonFromNetwork();
+                mRecyclerView.invalidate();
             }
         });
         mRecyclerView.addOnScrollListener(new OnScrollListener() {
@@ -140,12 +155,46 @@ public class FirstPageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myDataset = new ArrayList<>();
 
-        myDataset = new ArrayList<>( Arrays.asList(new Integer[] {R.drawable.first03,R.drawable.ll1,R.drawable.ll2,R.drawable.ll3,R.drawable.ll4,R.drawable.ll5,R.drawable.ll6,R.drawable.ll7}));
+        //get json
+        receiveJsonFromNetwork();
+
 
         sche = Executors.newSingleThreadScheduledExecutor();
-        sche.scheduleAtFixedRate(new SlideShowTask(),1,10, TimeUnit.SECONDS);
+        sche.scheduleAtFixedRate(new SlideShowTask(), 1, 10, TimeUnit.SECONDS);
 
+    }
+
+    private void receiveJsonFromNetwork() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = "http://10.0.3.2:8080/mywebapps/myjson.txt";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getActivity(),"网络连接正常"+response.substring(0,23), Toast.LENGTH_SHORT).show();
+                handleResponse(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(),"网络连接错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    private void handleResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("MyTeaPot");
+            for (int i =0; i < jsonArray.length(); i ++) {
+                myDataset.add((String) jsonArray.get(i));
+                Log.e(TAG,(String) jsonArray.get(i) );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
