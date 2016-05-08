@@ -124,8 +124,24 @@ public class FirstPageFragment extends Fragment {
         mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                receiveJsonFromNetwork();
-                mRecyclerView.invalidate();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        receiveJsonFromNetwork();
+                        mRecyclerView.setAdapter(mRVAdapter);
+                        mRecyclerView.invalidate();
+
+                        /*
+                        List<InstanceBean> temp=new ArrayList<InstanceBean>();
+                        for(inti=0;i<5;i++){
+                             InstanceBean bean=new InstanceBean("我是杨颖Item"+i,R.drawable.baby);
+                             temp.add(bean);
+                        }
+                        adapter.addRefreshBeans(temp);
+                        **/
+                    }
+                },2400);
+
             }
         });
         mRecyclerView.addOnScrollListener(new OnScrollListener() {
@@ -178,6 +194,7 @@ public class FirstPageFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                //由于文字没有缓存，所以连接错误直接全部不显示
                 Toast.makeText(getActivity(),"网络连接错误", Toast.LENGTH_SHORT).show();
             }
         });

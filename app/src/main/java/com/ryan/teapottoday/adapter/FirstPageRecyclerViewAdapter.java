@@ -31,6 +31,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public CardView mCardView;
@@ -82,12 +83,13 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                                                                       int viewType) {
         // create a new view
         CardView cv = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_card_view, parent, false);
+                .inflate(R.layout.my_card_view, parent, false);;
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(cv, new FirstPageRecyclerViewAdapter.ViewHolder.IMyViewHolderClicks() {
             @Override
             public void onFavImgClicked(View caller) {
                 caller.setBackgroundResource(R.drawable.ic_favorite);
+
             }
 
             @Override
@@ -130,10 +132,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             tvContent.setText("农历三月初七");
 
         } else {
+            String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2);
             ivPot.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             //get img from net
-            setImageView(ivPot, position);
+            setImageView(url, ivPot, position);
 
             tvDate.setText(mDateSet[position - 2]);
 
@@ -141,15 +144,16 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
     }
 
-    private void setImageView(ImageView ivPot, int position) {
+    private void setImageView(String url, ImageView ivPot, int position) {
         /*RequestQueue mQueue = Volley.newRequestQueue(mContext);
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapLruImageCache(10*1024*1024));
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(ivPot, R.drawable.demo, R.drawable.hee);
         imageLoader.get("http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2), listener, 200, 200);*/
 
+
         Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
         Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
-        ImageCacheManager.loadImage(mContext, "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2), ivPot, defaultImage, errorImage);
+        ImageCacheManager.loadImage(mContext, url, ivPot, defaultImage, errorImage);
 
     }
 
