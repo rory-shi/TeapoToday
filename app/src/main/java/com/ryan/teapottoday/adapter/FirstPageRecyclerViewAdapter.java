@@ -30,9 +30,12 @@ import java.util.ArrayList;
  */
 public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPageRecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
-    private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九",};
+    private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九",};
     public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
+
+    private MyDatabaseHelper dbHelper;
+    private SQLiteDatabase db;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -45,11 +48,15 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         private ImageView ivFavorite;
         private ImageView ivInCardView;
 
+
         public ViewHolder(CardView v, IMyViewHolderClicks listener) {
             super(v);
+
+
             mListener = listener;
             mCardView = v;
             ivFavorite = (ImageView) v.findViewById(R.id.fav_in_cv);
+
             ivFavorite.setOnClickListener(this);
             ivInCardView = (ImageView) v.findViewById(R.id.iv_in_cv);
             ivInCardView.setOnClickListener(this);
@@ -81,6 +88,10 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     public FirstPageRecyclerViewAdapter(Context context, ArrayList<String> myDataset) {
         mContext = context;
         mDataset = myDataset;
+
+
+        dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
+        db = dbHelper.getWritableDatabase();
     }
 
     // Create new views (invoked by the layout manager)
@@ -96,7 +107,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         ViewHolder vh = new ViewHolder(cv, new FirstPageRecyclerViewAdapter.ViewHolder.IMyViewHolderClicks() {
             @Override
             public void onFavImgClicked(View caller) {
-                caller.setBackgroundResource(R.drawable.ic_favorite);
                 CardView cardView = (CardView) caller.getParent().getParent();
                 String url = (String) cardView.getTag(R.string.url_tag);
                 //Toast.makeText(mContext,url,Toast.LENGTH_LONG).show();
@@ -107,19 +117,23 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                 editor.putString("url", url);
                 editor.commit();*/
 
-                MyDatabaseHelper dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                Cursor cursor = db.query("Teapot", null, null, null, null, null, null);
+
+              /*  Cursor cursor = db.query("Teapot", null, null, null, null, null, null);
                 if (cursor.moveToFirst()) {
                     //此处表明存在该url，
 
                 }
-                cursor.close();
+                cursor.close();*/
 
-                ContentValues values = new ContentValues();
-                values.put("url",url);
-                db.insert("Teapot", null, values);
+                int row = db.delete("Teapot", "url = ?", new String[]{url});
+                caller.setBackgroundResource(R.drawable.ic_favorite_border);
+                if (row == 0) {
+                    ContentValues values = new ContentValues();
+                    values.put("url",url);
+                    db.insert("Teapot", null, values);
+                    caller.setBackgroundResource(R.drawable.ic_favorite);
+                }
             }
 
             @Override
@@ -173,7 +187,13 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
             tvDate.setText(mDateSet[position - 2]);
 
-
+            Cursor cursor = db.query("Teapot", null,"url=?",new String[]{url},null,null,null,null );
+            if (cursor.moveToFirst()){
+                ivFav.setBackgroundResource(R.drawable.ic_favorite);
+            } else {
+                ivFav.setBackgroundResource(R.drawable.ic_favorite_border);
+            }
+            cursor.close();
         }
 
     }

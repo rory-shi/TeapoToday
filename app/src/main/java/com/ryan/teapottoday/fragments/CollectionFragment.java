@@ -102,6 +102,10 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                     mSelectMap.clear();
                 }
                 break;
+            case R.id.menu_delete:
+                mGridView.getCheckedItemPositions();
+                break;
+
         }
         return true;
     }
