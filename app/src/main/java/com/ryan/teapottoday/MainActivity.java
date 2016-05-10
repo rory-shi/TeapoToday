@@ -2,6 +2,7 @@ package com.ryan.teapottoday;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
@@ -30,22 +32,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView mNavigationView;
     private int drawerItemId;
 
-
+    private MyDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initData();
+        initDatabase();
 
         initView();
 
         initEvent();
     }
 
-    private void initData() {
-
+    private void initDatabase() {
+       /* dbHelper = new MyDatabaseHelper(this, "Teapot.db", null, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.insert()*/
     }
 
     private void initView() {

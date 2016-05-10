@@ -1,7 +1,11 @@
 package com.ryan.teapottoday.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
@@ -12,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
+import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.model.ImageCacheManager;
 
 import java.util.ArrayList;
@@ -81,15 +87,39 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     @Override
     public FirstPageRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                       int viewType) {
+
+
         // create a new view
         CardView cv = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_card_view, parent, false);;
+                .inflate(R.layout.my_card_view, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(cv, new FirstPageRecyclerViewAdapter.ViewHolder.IMyViewHolderClicks() {
             @Override
             public void onFavImgClicked(View caller) {
                 caller.setBackgroundResource(R.drawable.ic_favorite);
+                CardView cardView = (CardView) caller.getParent().getParent();
+                String url = (String) cardView.getTag(R.string.url_tag);
+                //Toast.makeText(mContext,url,Toast.LENGTH_LONG).show();
 
+                //save to SHaredPreference
+               /* SharedPreferences.Editor editor = mContext.getSharedPreferences("data",
+                        Context.MODE_PRIVATE).edit();
+                editor.putString("url", url);
+                editor.commit();*/
+
+                MyDatabaseHelper dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                Cursor cursor = db.query("Teapot", null, null, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    //此处表明存在该url，
+
+                }
+                cursor.close();
+
+                ContentValues values = new ContentValues();
+                values.put("url",url);
+                db.insert("Teapot", null, values);
             }
 
             @Override
@@ -108,6 +138,8 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
         //暴力解决了复用导致的界面布局混乱，但是牺牲了效率
         holder.setIsRecyclable(false);
+
+
 
         CardView cvTop = holder.mCardView;
         TextView tvTitle = (TextView) cvTop.findViewById(R.id.tv_title_in_cv);
@@ -133,12 +165,14 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
         } else {
             String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2);
+            cvTop.setTag(R.string.url_tag,url);
             ivPot.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             //get img from net
             setImageView(url, ivPot, position);
 
             tvDate.setText(mDateSet[position - 2]);
+
 
         }
 
@@ -154,6 +188,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
         Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
         ImageCacheManager.loadImage(mContext, url, ivPot, defaultImage, errorImage);
+
 
     }
 

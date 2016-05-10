@@ -40,17 +40,6 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     private static final int MENU_SELECT_ALL = 0;
     private static final int MENU_SELECT_NONE = MENU_SELECT_ALL + 1;
 
-    private int[] mImgIds = new int[] {
-            R.drawable.ll1,R.drawable.ll2,R.drawable.ll5,R.drawable.ll4,R.drawable.ll3,
-            R.drawable.ll5,R.drawable.ll1,R.drawable.ll2,R.drawable.ll4,R.drawable.ll5,
-            R.drawable.ll1,R.drawable.ll4,R.drawable.ll3,R.drawable.ll3,R.drawable.ll2,
-            R.drawable.ll3,R.drawable.ll2,R.drawable.ll2,R.drawable.ll1,R.drawable.ll5,
-            R.drawable.ll1,R.drawable.ll4,R.drawable.ll3,R.drawable.ll5,R.drawable.ll5,
-            R.drawable.ll1,R.drawable.ll2,R.drawable.ll3,R.drawable.ll4,R.drawable.ll1,
-            R.drawable.ll3,R.drawable.ll2,R.drawable.ll2,R.drawable.ll1,R.drawable.ll5,
-            R.drawable.ll1,R.drawable.ll4,R.drawable.ll3,R.drawable.ll5,R.drawable.ll5,
-            R.drawable.ll1,R.drawable.ll2,R.drawable.ll3,R.drawable.ll4,R.drawable.ll1
-    };
 
     public CollectionFragment (){}
 
@@ -65,7 +54,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
         View view =  inflater.inflate(R.layout.fragment_collection,container,false);
         mGridView = (GridView) view.findViewById(R.id.grid_collection);
         mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridViewAdapter =  new GridViewImageAdapter(getActivity(), mImgIds,mSelectMap);
+        mGridViewAdapter =  new GridViewImageAdapter(getActivity(),mSelectMap);
         mGridView.setAdapter(mGridViewAdapter);
         mGridView.setMultiChoiceModeListener(this);
        // mGridView.setOnClickListener();
