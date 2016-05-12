@@ -27,26 +27,13 @@ import java.util.Map;
 public class GridViewImageAdapter extends BaseAdapter {
     private Map<Integer, Boolean> mSelectMap = new HashMap<>();
     private Context mContext;
-    private MyDatabaseHelper dbHelper;
-    private SQLiteDatabase db;
     private ArrayList<String> urls;
 
-    public GridViewImageAdapter(Context context, HashMap<Integer,Boolean> map) {
+    public GridViewImageAdapter(Context context, HashMap<Integer,Boolean> map, ArrayList<String> urls) {
         mContext = context;
         this.mSelectMap = map;
 
-        urls = new ArrayList<>();
-
-        dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
-        db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query("Teapot", null, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String url = cursor.getString(cursor.getColumnIndex("url"));
-                urls.add(url);
-            } while ( cursor.moveToNext());
-        }
-        cursor.close();
+        this.urls = urls;
     }
 
     @Override

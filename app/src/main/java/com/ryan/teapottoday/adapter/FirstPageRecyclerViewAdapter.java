@@ -3,7 +3,6 @@ package com.ryan.teapottoday.adapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
  */
 public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPageRecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
-    private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九",};
+    private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九",};
     public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
 

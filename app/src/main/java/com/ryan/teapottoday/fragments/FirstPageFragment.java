@@ -32,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ryan.teapottoday.R;
+import com.ryan.teapottoday.VolleyController;
 import com.ryan.teapottoday.adapter.FirstPageRecyclerViewAdapter;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +47,9 @@ import org.json.JSONObject;
  */
 public class FirstPageFragment extends Fragment {
 
-    public static String TAG = "FirstPageFragmentTAG";
+    public static final String TAG = "FirstPageFragmentTAG";
+    public static final int UPDATE_FIRST_COLUMN = 1;
+    private static final int RECEIVE_JSON = 2;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mRVAdapter;
@@ -64,33 +67,46 @@ public class FirstPageFragment extends Fragment {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            switch (msg.what) {
+                case UPDATE_FIRST_COLUMN: {
 
-            mSrl.setRefreshing(false);
+                }
+                case RECEIVE_JSON:{
+                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
+                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
 
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
+                    AnimatorSet animSet = new AnimatorSet();
+                    animSet.play(scaleX).with(scaleY);
+                    animSet.setDuration(10000);
+                    animSet.start();
+                    switch ((timer++)%4) {
+                        case 0:
+                            mImageView.setImageResource(R.drawable.first03);
+                            break;
+                        case 1:
+                            mImageView.setImageResource(R.drawable.first02);
+                            break;
+                        case 2:
+                            mImageView.setImageResource(R.drawable.first04);
+                            break;
+                        case 3:
+                            mImageView.setImageResource(R.drawable.first01);
+                            break;
+                        default:
+                            break;
+                    }
+                    mSrl.setRefreshing(false);
 
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(scaleX).with(scaleY);
-            animSet.setDuration(10000);
-            animSet.start();
-            switch ((timer++)%4) {
-                case 0:
-                    mImageView.setImageResource(R.drawable.first03);
+
+                    Bundle bundle =  msg.getData();
+                    String response = bundle.getString(getString(R.string.handle_response));
+                    handleResponse(response);
+                    mSrl.setRefreshing(false);
                     break;
-                case 1:
-                    mImageView.setImageResource(R.drawable.first02);
-                    break;
-                case 2:
-                    mImageView.setImageResource(R.drawable.first04);
-                    break;
-                case 3:
-                    mImageView.setImageResource(R.drawable.first01);
-                    break;
-                default:
-                    break;
+                }
             }
+
+
 
         }
     };
@@ -124,7 +140,7 @@ public class FirstPageFragment extends Fragment {
         mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         receiveJsonFromNetwork();
@@ -140,7 +156,7 @@ public class FirstPageFragment extends Fragment {
                         adapter.addRefreshBeans(temp);
                         **/
                     }
-                },2400);
+                }, 2400);
 
             }
         });
@@ -151,7 +167,15 @@ public class FirstPageFragment extends Fragment {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mRVAdapter.getItemCount()) {
                     mSrl.setRefreshing(true);
 
-                    handler.sendEmptyMessageDelayed(0, 3000);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message message = new Message();
+                            message.what = RECEIVE_JSON;
+                            handler.sendMessage(message);
+                        }
+                    }).start();
+
                 }
             }
 
@@ -183,13 +207,24 @@ public class FirstPageFragment extends Fragment {
     }
 
     private void receiveJsonFromNetwork() {
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = VolleyController.getInstance(getActivity()).getRequestQueue();
         String url = "http://10.0.3.2:8080/mywebapps/myjson.txt";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(final String response) {
                 Toast.makeText(getActivity(),"网络连接正常"+response.substring(0,23), Toast.LENGTH_SHORT).show();
-                handleResponse(response);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Message msg = new Message();
+                        msg.what = RECEIVE_JSON;
+                        Bundle bundle = new Bundle();
+                        bundle.putString(getString(R.string.handle_response),response);
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    }
+                }).start();
+
             }
         }, new Response.ErrorListener() {
             @Override

@@ -10,4 +10,5 @@
     <string name="select_all">全选</string>
     <string name="select_none">全不选</string>
     <string name="url_tag">23232323</string>
+    <string name="handle_response">response</string>
 </resources>

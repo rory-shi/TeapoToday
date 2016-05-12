@@ -1,10 +1,14 @@
 package com.ryan.teapottoday.fragments;
 
 import android.app.Fragment;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +23,9 @@ import android.widget.Toast;
 
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.GridViewImageAdapter;
+import com.ryan.teapottoday.database.MyDatabaseHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +38,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     private GridView mGridView;
     private GridViewImageAdapter mGridViewAdapter;
     private Toolbar mToolBar;
-
+    private ArrayList<String> urls;
     private TextView mActionText;
 
     private HashMap<Integer, Boolean> mSelectMap = new HashMap<>();
@@ -41,11 +47,26 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     private static final int MENU_SELECT_NONE = MENU_SELECT_ALL + 1;
 
 
+    private MyDatabaseHelper dbHelper;
+    private SQLiteDatabase db;
     public CollectionFragment (){}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        urls = new ArrayList<>();
+
+        dbHelper = new MyDatabaseHelper(getActivity(),"TeapotToday.db",null,2);
+        db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("Teapot", null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String url = cursor.getString(cursor.getColumnIndex("url"));
+                urls.add(url);
+            } while ( cursor.moveToNext());
+        }
+        cursor.close();
     }
 
     @Nullable
@@ -54,7 +75,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
         View view =  inflater.inflate(R.layout.fragment_collection,container,false);
         mGridView = (GridView) view.findViewById(R.id.grid_collection);
         mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridViewAdapter =  new GridViewImageAdapter(getActivity(),mSelectMap);
+        mGridViewAdapter =  new GridViewImageAdapter(getActivity(),mSelectMap,urls);
         mGridView.setAdapter(mGridViewAdapter);
         mGridView.setMultiChoiceModeListener(this);
        // mGridView.setOnClickListener();
@@ -66,7 +87,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         mActionText.setText(formatString(mGridView.getCheckedItemCount()));
-        mSelectMap.put(position,checked);
+        mSelectMap.put(position, checked);
         mode.invalidate();
     }
 
@@ -97,17 +118,35 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                 }
                 break;
             case R.id.menu_select_none:
-                for (int i = 0; i < mGridView.getCount(); i++) {
-                    mGridView.setItemChecked(i, false);
-                    mSelectMap.clear();
-                }
+                selectNone();
+
                 break;
             case R.id.menu_delete:
-                mGridView.getCheckedItemPositions();
+                SparseBooleanArray array = mGridView.getCheckedItemPositions();
+                //Log.e("tagagagagag",array+"");
+                MyDatabaseHelper dbHelper = new MyDatabaseHelper(getActivity(),"TeapotToday.db",null,2);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                //从大到小删除，否则集合的顺序会乱
+                for (int i=array.size()-1;i>=0;i--) {
+                    if (array.get(i)){
+                        db.delete("Teapot", "url = ?", new String[]{urls.get(i)});
+                        urls.remove(i);
+                    }
+                }
+
+                mGridView.invalidate();
+                selectNone();
                 break;
 
         }
         return true;
+    }
+
+    private void selectNone() {
+        for (int i = 0; i < mGridView.getCount(); i++) {
+            mGridView.setItemChecked(i, false);
+            mSelectMap.clear();
+        }
     }
 
     @Override
