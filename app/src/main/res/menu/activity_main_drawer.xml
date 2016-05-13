@@ -24,13 +24,9 @@
     <item android:title="Others">
         <menu>
             <item
-                android:id="@+id/nav_set"
+                android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="设置" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_about_us"
-                android:title="关于" />
         </menu>
     </item>
 

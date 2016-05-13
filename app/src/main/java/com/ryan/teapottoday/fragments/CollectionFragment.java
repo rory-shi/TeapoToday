@@ -127,7 +127,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                 MyDatabaseHelper dbHelper = new MyDatabaseHelper(getActivity(),"TeapotToday.db",null,2);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 //从大到小删除，否则集合的顺序会乱
-                for (int i=array.size()-1;i>=0;i--) {
+                for (int i=urls.size()-1;i>=0;i--) {
                     if (array.get(i)){
                         db.delete("Teapot", "url = ?", new String[]{urls.get(i)});
                         urls.remove(i);

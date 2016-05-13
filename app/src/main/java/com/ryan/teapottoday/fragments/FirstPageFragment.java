@@ -242,9 +242,8 @@ public class FirstPageFragment extends Fragment {
             JSONArray jsonArray = jsonObject.getJSONArray("MyTeaPot");
             for (int i =0; i < jsonArray.length(); i ++) {
                 myDataset.add((String) jsonArray.get(i));
-                Log.e(TAG,(String) jsonArray.get(i) );
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

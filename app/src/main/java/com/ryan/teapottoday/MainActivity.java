@@ -3,6 +3,8 @@ package com.ryan.teapottoday;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,11 +14,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mikepenz.aboutlibraries.Libs;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
@@ -162,7 +167,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_production:
                 fragment = new ProductionFragment();
                 break;
+            case R.id.nav_settings:
+                fragment = new PreferenceFragment() {
+                    @Override
+                    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                             Bundle savedInstanceState) {
+                        View view = super.onCreateView(inflater, container, savedInstanceState);
+                        //Set night-mode or other UI changes
 
+                        return view;
+                    }
+
+                    @Override
+                    public void onCreate(Bundle savedInstanceState) {
+                        super.onCreate(savedInstanceState);
+                        addPreferencesFromResource(R.xml.settings_general);
+                        findPreference("about").setOnPreferenceClickListener(
+                                new Preference.OnPreferenceClickListener() {
+                                    @Override
+                                    public boolean onPreferenceClick(Preference preference) {
+                                        //config About Library
+                                        new Libs.Builder().withActivityTitle("About").withFields(R.string.class.getFields()).start(getActivity());
+                                        return false;
+                                    }
+                                });
+                    }
+                };
+                break;
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.contentFragment,fragment)

@@ -2,28 +2,40 @@ package com.ryan.teapottoday;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 /**
  * Created by rory9 on 2016/4/12.
  */
 public class ContentActivity extends Activity{
 
-    private ImageView vpContent;
+    private ViewPager vpContent;
     private float mLastY;
-    private MyVerticalScrollView mScrollView;
-
+    private ScrollView svContent;
+    private MyVPContentPagerAdapter myVPContentPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_layout);
-
-        mScrollView = (MyVerticalScrollView) findViewById(R.id.scroll_view_content);
-
-
+        vpContent = (ViewPager) findViewById(R.id.vp_content);
+        svContent = (ScrollView) findViewById(R.id.sv_content);
+        myVPContentPagerAdapter = new MyVPContentPagerAdapter(this);
+        vpContent.setAdapter(myVPContentPagerAdapter);
     }
 
-    /*@Override
+    //50是顶栏的高度
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getY()<vpContent.getHeight()+100) {
+            return super.dispatchTouchEvent(ev);
+        }
+        return onTouchEvent(ev);
+    }
+
     public boolean onTouchEvent(MotionEvent event) {
         //return super.onTouchEvent(event);
         switch (event.getAction()) {
@@ -41,8 +53,8 @@ public class ContentActivity extends Activity{
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) vpContent.getLayoutParams();
                 int mHeight = vpContent.getHeight();
                 lp.height = (int) (mHeight + delta/10);
-                if (lp.height<300) {
-                    lp.height = 300;
+                if (lp.height<0) {
+                    lp.height = 0;
                 } else if (lp.height>600) {
                     lp.height = 600;
                 }
@@ -65,5 +77,5 @@ public class ContentActivity extends Activity{
                 break;
         }
         return true;
-    }*/
+    }
 }

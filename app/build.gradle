@@ -30,4 +30,7 @@ dependencies {
     compile 'com.joooonho:selectableroundedimageview:1.0.1'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.jakewharton:disklrucache:2.0.2'
+    compile('com.mikepenz.aboutlibraries:library:4.6.5@aar') {
+        transitive = true
+    }
 }
