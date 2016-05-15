@@ -25,6 +25,7 @@ import com.mikepenz.aboutlibraries.Libs;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
+import com.ryan.teapottoday.fragments.HistoryFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
 
 
@@ -163,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_collection:
                 fragment = new CollectionFragment();
+                break;
+            case R.id.nav_history:
+                fragment = new HistoryFragment();
                 break;
             case R.id.nav_production:
                 fragment = new ProductionFragment();
