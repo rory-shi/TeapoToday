@@ -33,4 +33,5 @@ dependencies {
     compile('com.mikepenz.aboutlibraries:library:4.6.5@aar') {
         transitive = true
     }
+    compile 'com.github.XhinLiang:LunarCalendar:1.2.2'
 }

@@ -21,6 +21,7 @@ import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.model.ImageCacheManager;
+import com.ryan.teapottoday.utils.DateUtils;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  */
 public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPageRecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
-    private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九",};
+   // private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九",};
     public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
 
@@ -170,11 +171,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             tvDate.setVisibility(View.GONE);
             ivFav.setVisibility(View.GONE);
 
-            tvTitle.setText("4月13日，星期三");
+            tvTitle.setText(DateUtils.getToday("gregorian")+DateUtils.getToday("week"));
             tvTitle.setTextSize(32);
 
             tvContent.setTextSize(22);
-            tvContent.setText("农历三月初七");
+            tvContent.setText("农历"+DateUtils.getToday("lunar"));
 
         } else {
             String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2);
@@ -184,7 +185,8 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             //get img from net
             setImageView(url, ivPot, position);
 
-            tvDate.setText(mDateSet[position - 2]);
+            tvDate.setText(DateUtils.getDateAgo("", position-1));
+//            tvDate.setText(mDateSet[position - 2]);
 
             Cursor cursor = db.query("Teapot", null,"url=?",new String[]{url},null,null,null,null );
             if (cursor.moveToFirst()){
