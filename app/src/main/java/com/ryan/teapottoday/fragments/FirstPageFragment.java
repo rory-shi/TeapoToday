@@ -11,16 +11,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,16 +27,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.ryan.teapottoday.R;
-import com.ryan.teapottoday.VolleyController;
 import com.ryan.teapottoday.adapter.FirstPageRecyclerViewAdapter;
+import com.ryan.teapottoday.model.VolleyController;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -72,14 +67,14 @@ public class FirstPageFragment extends Fragment {
 
                 }
                 case RECEIVE_JSON:{
-                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
-                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
+                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
+                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
 
-                    AnimatorSet animSet = new AnimatorSet();
-                    animSet.play(scaleX).with(scaleY);
-                    animSet.setDuration(10000);
-                    animSet.start();
-                    switch ((timer++)%4) {
+                        AnimatorSet animSet = new AnimatorSet();
+                        animSet.play(scaleX).with(scaleY);
+                        animSet.setDuration(10000);
+                        animSet.start();
+                        switch ((timer++)%4) {
                         case 0:
                             mImageView.setImageResource(R.drawable.first03);
                             break;
@@ -98,9 +93,10 @@ public class FirstPageFragment extends Fragment {
                     mSrl.setRefreshing(false);
 
 
-                    Bundle bundle =  msg.getData();
-                    String response = bundle.getString(getString(R.string.handle_response));
-                    handleResponse(response);
+                    myDataset = (ArrayList<String>) msg.obj;
+                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),myDataset);
+                    mRecyclerView.setAdapter(mRVAdapter);
+
                     mSrl.setRefreshing(false);
                     break;
                 }
@@ -129,9 +125,6 @@ public class FirstPageFragment extends Fragment {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
-        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),myDataset);
-        mRecyclerView.setAdapter(mRVAdapter);
 
         mSrl.setColorSchemeColors(R.color.colorPrimary);
         mSrl.setProgressViewOffset(false, 100, 100 + (int) TypedValue
@@ -144,7 +137,7 @@ public class FirstPageFragment extends Fragment {
                     @Override
                     public void run() {
                         receiveJsonFromNetwork();
-                        mRecyclerView.setAdapter(mRVAdapter);
+                        //mRecyclerView.setAdapter(mRVAdapter);
                         mRecyclerView.invalidate();
 
                         /*
@@ -160,22 +153,20 @@ public class FirstPageFragment extends Fragment {
 
             }
         });
-        mRecyclerView.addOnScrollListener(new OnScrollListener() {
+
+        // specify an adapter (see also next example)
+        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), myDataset);
+        mRecyclerView.setAdapter(mRVAdapter);
+
+
+      /*  mRecyclerView.addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mRVAdapter.getItemCount()) {
                     mSrl.setRefreshing(true);
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message message = new Message();
-                            message.what = RECEIVE_JSON;
-                            handler.sendMessage(message);
-                        }
-                    }).start();
-
+                    receiveJsonFromNetwork();
                 }
             }
 
@@ -185,8 +176,8 @@ public class FirstPageFragment extends Fragment {
                 lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
 
             }
-        });
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        });*/
+        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         return view;
     }
@@ -212,15 +203,14 @@ public class FirstPageFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String response) {
-                Toast.makeText(getActivity(),"网络连接正常"+response.substring(0,23), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"网络连接正常"+response.substring(0,23), Toast.LENGTH_SHORT).show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         Message msg = new Message();
                         msg.what = RECEIVE_JSON;
-                        Bundle bundle = new Bundle();
-                        bundle.putString(getString(R.string.handle_response),response);
-                        msg.setData(bundle);
+                        ArrayList<String> myData = handleResponse(response);
+                        msg.obj = myData;
                         handler.sendMessage(msg);
                     }
                 }).start();
@@ -236,16 +226,18 @@ public class FirstPageFragment extends Fragment {
         queue.add(stringRequest);
     }
 
-    private void handleResponse(String response) {
+    private ArrayList<String> handleResponse(String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("MyTeaPot");
+            myDataset.clear();
             for (int i =0; i < jsonArray.length(); i ++) {
                 myDataset.add((String) jsonArray.get(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return myDataset;
     }
 
 

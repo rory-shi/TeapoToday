@@ -9,4 +9,5 @@
 
 
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="size_default_height">240dp</dimen>
 </resources>

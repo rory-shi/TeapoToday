@@ -42,7 +42,6 @@ public class ExampleAppWidgetService extends Service {
         if (mUpdateThread != null) {
             mUpdateThread.interrupt();
         }
-
         super.onDestroy();
     }
 

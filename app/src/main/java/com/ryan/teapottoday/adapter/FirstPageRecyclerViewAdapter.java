@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ryan.teapottoday.CalendarActivity;
 import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
@@ -36,6 +37,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
     private MyDatabaseHelper dbHelper;
     private SQLiteDatabase db;
+    private boolean debug = false;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -138,8 +140,17 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
             @Override
             public void onImgClicked(View caller) {
-                Log.e("mytag", "onimg clicked");
+                if (debug) {
+                    Log.e("debug", "on img clicked");
+                }
+
+                CardView cardView = (CardView) caller.getParent().getParent();
+                String url = (String) cardView.getTag(R.string.url_tag);
                 Intent intent = new Intent(mContext, ContentActivity.class);
+                intent.putExtra("url",url);
+                if (debug) {
+                    Log.e("url",url);
+                }
                 mContext.startActivity(intent);
             }
         });
@@ -233,6 +244,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size() + 1;
+        return mDataset.size() + 2;
     }
 }

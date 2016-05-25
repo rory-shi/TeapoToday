@@ -31,7 +31,7 @@ public class ProductionRecyclerViewAdapter extends RecyclerView.Adapter<Producti
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageView mImg = holder.mImageView;
         mImg.setImageResource(mDataset[position]);
-        mImg.setScaleType(ImageView.ScaleType.FIT_XY);
+        mImg.setScaleType(ImageView.ScaleType.FIT_START);
     }
 
     @Override

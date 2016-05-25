@@ -3,7 +3,7 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="86400000"
-    android:previewImage="@drawable/ic_menu_send"
     android:initialLayout="@layout/example_appwidget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"> </appwidget-provider>
+    <!-- config-->

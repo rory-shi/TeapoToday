@@ -1,104 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+    android:layout_width="match_parent">
     <android.support.v4.view.ViewPager
-        android:id="@+id/vp_content"
+        android:id="@+id/detail_view"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:background="@drawable/demo" />
-    <ScrollView
-        android:id="@+id/sv_content"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:background="#eeeeee"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <include layout="@layout/content_title_bar"/>
 
-        <LinearLayout
+        <com.ryan.teapottoday.diyView.PullToZoomScrollView
+            android:id="@+id/sv_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.joooonho.SelectableRoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/detail_round_pic"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/demo"
-                    app:sriv_border_color="#008fea"
-                    app:sriv_border_width="2dip"
-                    app:sriv_left_bottom_corner_radius="48dip"
-                    app:sriv_left_top_corner_radius="16dip"
-                    app:sriv_oval="true"
-                    app:sriv_right_bottom_corner_radius="16dip"
-                    app:sriv_right_top_corner_radius="0dip" />
-
-                <TextView
-                    android:layout_width="300dp"
-                    android:layout_height="100dp"
-                    android:layout_toRightOf="@id/detail_round_pic"
-                    android:gravity="center"
-                    android:text="原矿墨绿泥"
-                    android:textSize="25sp" />
-
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--     <ImageView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:background="@drawable/demo"
+                         android:scaleType="centerCrop"/>-->
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/vp_content"
                     android:layout_width="match_parent"
-                    android:layout_height="800dp"
-                    android:layout_alignParentBottom="true"
-                    android:text="墨绿泥，产于江苏宜兴丁山、黄龙山。近天青泥色调，玩家易感迷惑，常误云&quot;绿泥&quot;，绿泥者，澹草绿色也；&quot;;本山绿泥者段泥之原矿矣，泥色青蓝略泛绿光而无灰色调，始称'墨绿泥'&quot;;。墨绿泥与本山绿泥有一个相同点，就是都是紫泥层的夹脂，也是原矿中较为稀少的泥料，因可朔性比较差，烧制过程中十分容易开裂，用后极易产生龟裂现象，所以通常它们很少单独成型。墨绿泥是已濒临绝迹的泥料之一。
+                    android:layout_height="240dp" />
 
-                【窑温】约1120°。
-
-                【收缩比】约14%。
-
-                【泥性】 墨绿泥黏性佳，张力尚可，细腻密实；制壶光、花均宜，为优质泥矿，产量不丰。制作时较易变形，对窑温要求高，窑温足则色泽温润，不足则色嫩枯燥，原料收集不易，练制困难与繁杂。烧成后泥色特异，青蓝色中略泛绿光，清秀独特；稍一泡养，色调更形稳实，温润透明，变化甚巨，玩赏深具成就感。
-
-                【冲茗】 茶性温顺滑腻，味香凝聚，冲泡时间易掌控，能以轻松心情泡杯好茶，实为品茗之最佳帮手。适合乌龙茶、绿茶、红茶、普洱茶等各个系列。" />
-            </RelativeLayout>
-            <!--<RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp">
-                <com.joooonho.SelectableRoundedImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:scaleType="centerCrop"
-                    app:sriv_left_top_corner_radius="16dip"
-                    app:sriv_right_top_corner_radius="0dip"
-                    app:sriv_left_bottom_corner_radius="48dip"
-                    app:sriv_right_bottom_corner_radius="16dip"
-                    app:sriv_border_width="2dip"
-                    app:sriv_border_color="#008fea"
-                    app:sriv_oval="true"
-                    android:id="@+id/craftsman_round_pic"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/demo"/>
-                <TextView
-                    android:layout_width="300dp"
-                    android:layout_height="100dp"
-                    android:layout_toRightOf="@id/craftsman_round_pic"
-                    android:textSize="25sp"
-                    android:gravity="center"
-                    android:text="原矿墨绿泥"/>
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_alignParentBottom="true"
-                    android:text="conedsconedscone\ndsconedsconedsconeds\\nconedsconedsconeds\\nconedsconedsconedsconedsconeds"/>
-            </RelativeLayout>-->
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_dirt_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="原矿底槽清"
+                        android:textSize="25sp"/>
+                    <com.joooonho.SelectableRoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/detail_round_img_dirt"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginLeft="80dp"
+                        android:layout_marginTop="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/shengtao_dirt"
+                        app:sriv_border_color="#ffffff"
+                        app:sriv_border_width="5dip"
+                        app:sriv_left_bottom_corner_radius="48dip"
+                        app:sriv_left_top_corner_radius="16dip"
+                        app:sriv_oval="true"
+                        app:sriv_right_bottom_corner_radius="16dip"
+                        app:sriv_right_top_corner_radius="0dip" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_dirt_intro"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="原矿底槽清
+原矿底槽青，产于江苏宜兴黄龙山系，紫泥原矿大致可分：头槽青、二槽青、底槽青等三类，本泥产于紫泥矿料最底层，质量之佳，为历代陶人推崇之首，亦为数百年来经典名器，及已故顾景舟大师最锺爱之名泥；此泥矿名称，因宜兴产地方言沿用已久，为恐溷淆，故用其音直译文字，以&quot;底槽青&quot;名之。最早产于黄龙山四号井，后来是黄龙山五号井和台西矿。由于产于紫砂最底层，质地特纯，泥质细腻、成色稳重，呈棕色，在近代制壶名家广泛使用。制成后细看壶表内有不均匀的细小金黄色或灰黄色颗粒，底槽青矿料中的&quot;鸡眼&quot;、&quot;猫眼&quot;粉碎后呈现的是黄色颗粒，因此底槽青泥料制成的壶表面有&quot;金砂隐现&quot;的说法，养成成色非常润！
+
+\n【窑温】约1180°。
+
+\n【收缩比】约12%。
+
+\n【矿产地】近年黄龙山四号井，因故塴蹋而封井，矿源日益短缺，残留堆积风化之&quot;底槽青&quot;因而愈显珍贵；宜兴紫砂举世闻名，本泥功不可没。
+
+\n【泥性】底槽青由于产于紫砂最底层，质地特纯，泥质细腻、成色稳重，呈棕色，在近代制壶名家广泛使用。近年黄龙山四号井，因故塴蹋而封井，矿源日益短缺，残留堆积风化之&quot;底槽青&quot;因而愈显珍贵；宜兴紫砂举世闻名，本泥功不可没。
+
+\n【特点】块状中有青绿色的&quot;鸡眼&quot;、&quot;猫眼&quot;、色呈偏紫泛青，细而纯正，十分稀少。烧成的壶呈现红猪肝色，烧成颜色具体要看矿料的成分构成和烧成温度。
+
+\n【冲茗特性】温和典雅，茶汤韵味悠扬、沉着持久，养泡日久，泥色由棕变幻为古黯肝色，愈显古朴素雅，明润光和也！
+
+\n【冲泡建议】普洱茶各种系列，乌龙茶生茶(轻焙火系列)，龙井，花茶，碧螺春，红茶，绿茶等。"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tv_artisan_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="史云棠"
+                        android:textSize="25sp"/>
+                    <com.joooonho.SelectableRoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/detail_round_img_artisan"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginLeft="80dp"
+                        android:layout_marginTop="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/shengtao_artisan"
+                        app:sriv_border_color="#ffffff"
+                        app:sriv_border_width="2dip"
+                        app:sriv_left_bottom_corner_radius="48dip"
+                        app:sriv_left_top_corner_radius="16dip"
+                        app:sriv_oval="true"
+                        app:sriv_right_bottom_corner_radius="16dip"
+                        app:sriv_right_top_corner_radius="0dip" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_artisan_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="史云棠
+工艺美术师
+\n师从国大师徐汉棠先生
+
+ \n史云棠，男，国家级工艺美术师，紫砂壶艺人、陶瓷艺人。代表作品：南瓜壶、圣桃等。1968年生于江苏宜兴，1984年进紫砂工艺二厂，随国大师徐汉棠先生学艺，大师言传身教，倾心相授，使其打下了扎实的基本功。1989年调厂研究室从事新品开发。
+
+  \n作品立足传统，吸收其它艺术精华，深厚敦朴、古朴典雅而又不凡灵动，做工精细、线条流畅，蕴含精、气、神之美。作品曾多次在国内外大赛中获奖，1996年赴马来西亚办个人作品展，受到广泛好评;1998年《圣陶壶》收录在《当代宜兴名人录》，《井栏壶》获世界华人艺术大奖优秀奖;1999年《七彩南瓜壶》参加江苏陶艺展获银奖;2000年《金钟壶》在第二届国家级工艺美术大师精品展上获金奖;2001年《竹段壶》录入《中国宜兴国际陶艺展作品集》;2004年《陶神壶》获《中艺杯》全国礼品艺术品博览会金奖。"/>
+            </LinearLayout>
+        </com.ryan.teapottoday.diyView.PullToZoomScrollView>
+    </LinearLayout>
+
+</FrameLayout>

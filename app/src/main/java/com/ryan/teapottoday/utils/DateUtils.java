@@ -12,14 +12,13 @@ import io.github.xhinliang.lunarcalendar.LunarCalendar;
 public class DateUtils {
 
 
-
     public static String getToday(String flag) {
         return getDateAgo(flag, 0);
     }
 
     public static String getDateAgo(String flag, int days) {
         //get time
-        Date date = new Date(System.currentTimeMillis()-1000*60*60*24*days);
+        Date date = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * days);
         //date.getTime();
         //System.currentTimeMillis();
 
@@ -45,7 +44,7 @@ public class DateUtils {
         LunarCalendar lunarCalendar = LunarCalendar.getInstance(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day));
         String lunarMonth = lunarCalendar.getLunarMonth();
         String lunarDay = lunarCalendar.getLunarDay();
-        String lunarTimeSet = lunarMonth+"月"+lunarDay;
+        String lunarTimeSet = lunarMonth + "月" + lunarDay;
 
         switch (flag) {
             case "gregorian": {
@@ -59,7 +58,7 @@ public class DateUtils {
             }
             default:
             case "all": {
-                return timeSet+"\n"+lunarTimeSet;
+                return timeSet + "\n" + lunarTimeSet;
             }
         }
     }

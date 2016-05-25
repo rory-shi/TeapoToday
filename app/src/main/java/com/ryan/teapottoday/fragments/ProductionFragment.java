@@ -36,6 +36,8 @@ public class ProductionFragment extends Fragment{
         // use a linear layout manager
         //mRecyclerView.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getActivity());
+
+
        // mLayoutManager.setAutoMeasureEnabled(false);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
