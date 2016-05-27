@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -18,23 +20,28 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.GridViewImageAdapter;
+import com.ryan.teapottoday.adapter.HistoryViewPagerAdapter;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.diyView.TextViewVertical;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
  * Created by rory9 on 2016/4/6.
  */
 public class HistoryFragment extends Fragment {
-    private TextViewVertical tv;
-    private HorizontalScrollView sv;
+//    private TextViewVertical tv;
+//    private HorizontalScrollView sv;
+    private ViewPager historyViewPager;
+    private int[] ids = {R.drawable.history_song,R.drawable.history_ming,R.drawable.history_qing,R.drawable.history_now};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +53,19 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_history,container,false);
-        tv = (TextViewVertical) view.findViewById(R.id.tv);
+        historyViewPager = (ViewPager) view.findViewById(R.id.vp_history);
+
+        List<View> viewList = new ArrayList<>();
+        for (int i=0;i<ids.length;i++) {
+            ImageView iv = new ImageView(getActivity());
+            iv.setImageResource(ids[i]);
+            iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            viewList.add(iv);
+        }
+
+        historyViewPager.setAdapter(new HistoryViewPagerAdapter(viewList));
+
+       // tv = (TextViewVertical) view.findViewById(R.id.tv);
         /*sv = (HorizontalScrollView) view.findViewById(R.id.sv);
 
         //设置接口事件接收
@@ -67,7 +86,7 @@ public class HistoryFragment extends Fragment {
         //tv.setTypeface(face);
 
         //设置文字内容
-        tv.setText(getString(R.string.ICH_history_01));
+       // tv.setText(getString(R.string.ICH_history_01));
         return view;
     }
 

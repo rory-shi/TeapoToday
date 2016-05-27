@@ -128,8 +128,9 @@ public class TextViewVertical extends View {
 
     private void draw(Canvas canvas, String thetext) {
         char ch;
-        mTextPosy = 0;//初始化y坐标
-        mTextPosx = textStartAlign == Align.LEFT ? mLineWidth : mTextWidth - mLineWidth;//初始化x坐标
+        mTextPosy = 150;//初始化y坐标
+        mTextPosx = textStartAlign ==  Align.LEFT ? mLineWidth : mTextWidth - mLineWidth;//初始化x坐标
+       // mTextPosx = textStartAlign ==  Align.LEFT ? mLineWidth : mTextWidth - mLineWidth;//初始化x坐标
         for (int i = 0; i < this.TextLength; i++) {
             ch = thetext.charAt(i);
             if (ch == '\n') {
@@ -138,7 +139,7 @@ public class TextViewVertical extends View {
                 } else {
                     mTextPosx -= mLineWidth;// 换列
                 }
-                mTextPosy = 0;
+                mTextPosy = 100;
             } else {
                 mTextPosy += mFontHeight;
                 if (mTextPosy > this.mTextHeight) {
@@ -169,7 +170,7 @@ public class TextViewVertical extends View {
         if (mLineWidth == 0) {
             float[] widths = new float[1];
             paint.getTextWidths("正", widths);//获取单个汉字的宽度
-            mLineWidth = (int) Math.ceil(widths[0] * 1.1 + 2);
+            mLineWidth = (int) Math.ceil(widths[0] * 2 + 2);
         }
 
         FontMetrics fm = paint.getFontMetrics();
@@ -216,7 +217,7 @@ public class TextViewVertical extends View {
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-        int result = 500;
+        int result = 1000;
         if (specMode == MeasureSpec.AT_MOST) {
             result = specSize;
         } else if (specMode == MeasureSpec.EXACTLY) {

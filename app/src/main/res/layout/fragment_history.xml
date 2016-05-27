@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sv"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ffffffff" >
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"/>
-    <com.ryan.teapottoday.diyView.TextViewVertical
-        android:id="@+id/tv"
-        android:paddingRight="200dp"
-        android:paddingTop="200dp"
+    android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@null"
-
-        textSize="40"/>
-</LinearLayout>
+        android:layout_height="match_parent"/>
+    <!--<com.ryan.teapottoday.diyView.TextViewVertical-->
+        <!--android:id="@+id/tv"-->
+        <!--android:paddingRight="200dp"-->
+        <!--android:paddingTop="200dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@null"-->
+        <!--android:layout_gravity="center"-->
+        <!--textSize="30"/>-->
+</FrameLayout>
