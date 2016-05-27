@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,7 +39,7 @@ public class GridViewImageAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<String> urls;
     private boolean debug = true;
-
+    private GestureDetector gestureDetector;
     public GridViewImageAdapter(Context context, HashMap<Integer,Boolean> map, ArrayList<String> urls) {
         mContext = context;
         this.mSelectMap = map;
@@ -75,10 +77,11 @@ public class GridViewImageAdapter extends BaseAdapter {
                 Context.MODE_PRIVATE);
         String url = pref.getString("url", "");*/
 
-        item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(mContext);
+
+        gestureDetector = new GestureDetector(mContext, new SingleTapConfirm());
+
+        /*
+        * LayoutInflater inflater = LayoutInflater.from(mContext);
                 View imgEntryView = inflater.inflate(R.layout.content_image, null); // 加载自定义的布局文件
                 ImageView ivContentDetail = (ImageView) imgEntryView.findViewById(R.id.iv_content_img);
                 String url = urls.get(position);
@@ -111,8 +114,7 @@ public class GridViewImageAdapter extends BaseAdapter {
                         dialog.cancel();
                     }
                 });
-            }
-        });
+        * */
 
         item.setImgUrl(urls.get(position));
         //item.setImgResId(getItem(position));
@@ -121,4 +123,13 @@ public class GridViewImageAdapter extends BaseAdapter {
         return item;
     }
 
+
+    private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
+
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return true;
+        }
+    }
 }

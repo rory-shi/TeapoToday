@@ -1,8 +1,11 @@
 package com.ryan.teapottoday.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -10,20 +13,26 @@ import android.text.Layout;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.GridViewImageAdapter;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
+import com.ryan.teapottoday.model.ImageCacheManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,11 +87,49 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
         mGridViewAdapter =  new GridViewImageAdapter(getActivity(),mSelectMap,urls);
         mGridView.setAdapter(mGridViewAdapter);
         mGridView.setMultiChoiceModeListener(this);
-       // mGridView.setOnClickListener();
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                View imgEntryView = inflater.inflate(R.layout.content_image, null); // 加载自定义的布局文件
+                ImageView ivContentDetail = (ImageView) imgEntryView.findViewById(R.id.iv_content_img);
+                ivContentDetail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ivContentDetail.setMinimumWidth(getActivity().getResources().getDisplayMetrics().widthPixels+200);
+                String url = urls.get(position);
+
+                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.demo);
+                Bitmap errorImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.hee);
+                ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, errorImage);
+
+                final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+
+                //ImageView img = (ImageView) imgEntryView.findViewById(R.id.demo);
+                //imageDownloader.download("图片地址", img); // 这个是加载网络图片的，可以是自己的图片设置方法
+                dialog.setView(imgEntryView); // 自定义dialog
+
+                Window dialogWindow = dialog.getWindow();
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                dialogWindow.setGravity(Gravity.CENTER);
+                lp.width = getActivity().getResources().getDisplayMetrics().widthPixels+200; // 宽度
+                //lp.height = 500; // 高度
+                dialogWindow.setAttributes(lp);
+
+
+                dialog.show();
+                // 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
+                imgEntryView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View paramView) {
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
 
 //        mToolBar.startActionMode(this);
         return view;
     }
+
+
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -157,5 +204,7 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     private String formatString(int count) {
         return String.format(getString(R.string.selection),count);
     }
+
+
 
 }
