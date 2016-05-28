@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import com.ryan.teapottoday.R;
 
-/**
- * Created by rory9 on 2016/4/9.
- */
 public class ProductionRecyclerViewAdapter extends RecyclerView.Adapter<ProductionRecyclerViewAdapter.ViewHolder> {
 
     private int[] mDataset = {R.drawable.pd_tools,R.drawable.pd1,R.drawable.pd2,R.drawable.pd3,R.drawable.pd4,R.drawable.pd5,R.drawable.pd6,
@@ -23,15 +20,16 @@ public class ProductionRecyclerViewAdapter extends RecyclerView.Adapter<Producti
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ImageView mImageView = (ImageView) LayoutInflater.from(parent.getContext()).inflate(R.layout.production_item,parent,false);
-        ViewHolder vh = new ViewHolder(mImageView);
-        return vh;
+        return new ViewHolder(mImageView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         ImageView mImg = holder.mImageView;
         mImg.setImageResource(mDataset[position]);
-        mImg.setScaleType(ImageView.ScaleType.FIT_START);
+        mImg.setAdjustViewBounds(true);
+        mImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     @Override

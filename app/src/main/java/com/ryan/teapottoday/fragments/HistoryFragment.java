@@ -34,9 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 
 
-/**
- * Created by rory9 on 2016/4/6.
- */
 public class HistoryFragment extends Fragment {
 //    private TextViewVertical tv;
 //    private HorizontalScrollView sv;
@@ -54,11 +51,12 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_history,container,false);
         historyViewPager = (ViewPager) view.findViewById(R.id.vp_history);
-
         List<View> viewList = new ArrayList<>();
-        for (int i=0;i<ids.length;i++) {
+
+
+        for (int id : ids) {
             ImageView iv = new ImageView(getActivity());
-            iv.setImageResource(ids[i]);
+            iv.setImageResource(id);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             viewList.add(iv);
         }

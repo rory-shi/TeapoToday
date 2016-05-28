@@ -9,14 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ryan.teapottoday.ProductionRViewLLManager;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.ProductionRecyclerViewAdapter;
 
 
-/**
- * Created by rory9 on 2016/4/9.
- */
 public class ProductionFragment extends Fragment{
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
@@ -35,9 +31,8 @@ public class ProductionFragment extends Fragment{
         mRecyclerView = (RecyclerView) v.findViewById(R.id.production_recycler_view);
         // use a linear layout manager
         //mRecyclerView.setHasFixedSize(false);
+
         mLayoutManager = new LinearLayoutManager(getActivity());
-
-
        // mLayoutManager.setAutoMeasureEnabled(false);
 
         mRecyclerView.setLayoutManager(mLayoutManager);

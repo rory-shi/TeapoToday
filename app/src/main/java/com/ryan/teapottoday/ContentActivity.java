@@ -33,9 +33,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-/**
- * Created by rory9 on 2016/4/12.
- */
 public class ContentActivity extends Activity {
 
     private ViewPager vpContent;
@@ -54,15 +51,21 @@ public class ContentActivity extends Activity {
     private TextView tvArtisanName;
     private Button btnBack;
     private boolean debug = false;
+    private String[] arrs;
 
     private String contentDir = "http://10.0.3.2:8080/mywebapps/content_detail2";
 
+
+    @SuppressWarnings("unchecked")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case RECEIVE_JSON: {
-                    teapotImgsList = (ArrayList<String>) msg.obj;
+
+                    if (msg.obj instanceof  ArrayList) {
+                        teapotImgsList = (ArrayList<String>) msg.obj;
+                    }
 
                     String artImg = teapotImgsList.get(0);
                     String dirtImg = teapotImgsList.get(1);
@@ -106,10 +109,13 @@ public class ContentActivity extends Activity {
 
         Intent intentFrom = getIntent();
         String url = intentFrom.getStringExtra("url");
-        String[] arrs = url.split("/");
+        if (url.length()>0) {
+            arrs = url.split("/");
+        }
+
 
         contentDir = url.replace(arrs[arrs.length - 1], "");
-        if (debug) {
+        if (BuildConfig.DEBUG) {
             Log.e("debug", url);
             Log.e("debug", arrs[arrs.length - 1]);
             Log.e("debug", contentDir);
@@ -186,7 +192,6 @@ public class ContentActivity extends Activity {
             JSONObject jsonImg = (JSONObject) jsonArray.get(0);
             artimg = (String) jsonImg.get("artisan");
             dirtImg = (String) jsonImg.get("dirt");
-            ;
             JSONArray teapotImgs = jsonImg.getJSONArray("teapot");
             teapotImgsList.add(artimg);
             teapotImgsList.add(dirtImg);

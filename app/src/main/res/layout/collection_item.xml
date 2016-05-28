@@ -7,7 +7,7 @@
         android:id="@+id/iv_collection"
         android:layout_width="120dp"
         android:layout_height="83dp"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/iv_check_collection"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/icon_check"
+        android:src="@drawable/icon_check"
         android:visibility="gone" />
     <!-- 这里是当该图片被选上的时候打上小勾的,因此起初是隐藏不显示的 -->
 </RelativeLayout>  
