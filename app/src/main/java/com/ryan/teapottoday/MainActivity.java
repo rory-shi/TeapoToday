@@ -29,10 +29,10 @@ import com.ryan.teapottoday.fragments.HistoryFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
-   // private FloatingActionButton mFab;
+    // private FloatingActionButton mFab;
     private ActionBarDrawerToggle mToggle;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
 
 
-
         //init FAB
         /*mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -139,15 +138,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             Toast.makeText(this,"首页",Toast.LENGTH_LONG).show();
             return true;
-        }/*
+        }
         if (id == R.id.action_all_choose) {
             Toast.makeText(this,"全选",Toast.LENGTH_LONG).show();
             return true;
         }
-*/
+
         return super.onOptionsItemSelected(item);
     }
-
+    */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -176,10 +175,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                              Bundle savedInstanceState) {
-                        View view = super.onCreateView(inflater, container, savedInstanceState);
+
                         //Set night-mode or other UI changes
 
-                        return view;
+                        return super.onCreateView(inflater, container, savedInstanceState);
                     }
 
                     @Override
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         fragmentManager.beginTransaction()
-                .replace(R.id.contentFragment,fragment)
+                .replace(R.id.contentFragment, fragment)
                 .commit();
         //fragmentManager.executePendingTransactions();
 

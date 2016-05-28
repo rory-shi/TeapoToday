@@ -109,17 +109,11 @@ public class ContentActivity extends Activity {
 
         Intent intentFrom = getIntent();
         String url = intentFrom.getStringExtra("url");
-        if (url.length()>0) {
-            arrs = url.split("/");
-        }
 
 
-        contentDir = url.replace(arrs[arrs.length - 1], "");
-        if (BuildConfig.DEBUG) {
-            Log.e("debug", url);
-            Log.e("debug", arrs[arrs.length - 1]);
-            Log.e("debug", contentDir);
-        }
+
+
+
 
 
         imgArtisan = (SelectableRoundedImageView) findViewById(R.id.detail_round_img_artisan);
@@ -130,8 +124,17 @@ public class ContentActivity extends Activity {
         tvArtisanName = (TextView) findViewById(R.id.tv_artisan_name);
 
         teapotImgsList = new ArrayList<>();
-        receiveJsonFromNetwork();
 
+        if (url != null) {
+            arrs = url.split("/");
+            contentDir = url.replace(arrs[arrs.length - 1], "");
+            receiveJsonFromNetwork();
+            if (BuildConfig.DEBUG) {
+                Log.e("debug", url);
+                Log.e("debug", arrs[arrs.length - 1]);
+                Log.e("debug", contentDir);
+            }
+        }
 
         vpContent = (ViewPager) findViewById(R.id.vp_content);
         svContent = (PullToZoomScrollView) findViewById(R.id.sv_content);
