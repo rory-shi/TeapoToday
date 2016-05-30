@@ -23,6 +23,7 @@ import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.model.ImageCacheManager;
 import com.ryan.teapottoday.utils.DateUtils;
+import com.ryan.teapottoday.utils.DensityUtil;
 
 import java.util.ArrayList;
 
@@ -174,10 +175,14 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         ImageView ivFav = (ImageView) cvTop.findViewById(R.id.fav_in_cv);
         if (position == 0) {
 
-            cvTop.getLayoutParams().height = 800;
+//            int dp = DensityUtil.px2dip(mContext,800);
+//            Log.e("dpdpdp",dp+"");
+            int px = DensityUtil.dip2px(mContext,400);
+            cvTop.getLayoutParams().height = px;
             cvTop.setAlpha(0);
         } else if (position == 1) {
-            cvTop.getLayoutParams().height = HELLO_ITEM_HEIGHT;
+            int px = DensityUtil.dip2px(mContext, 168);
+            cvTop.getLayoutParams().height = px;
             ivPot.setVisibility(View.GONE);
             tvDate.setVisibility(View.GONE);
             ivFav.setVisibility(View.GONE);

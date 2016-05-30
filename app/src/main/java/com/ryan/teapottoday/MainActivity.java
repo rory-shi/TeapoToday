@@ -172,29 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_settings:
                 fragment = new PreferenceFragment() {
-                    @Override
-                    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                             Bundle savedInstanceState) {
 
-                        //Set night-mode or other UI changes
-
-                        return super.onCreateView(inflater, container, savedInstanceState);
-                    }
-
-                    @Override
-                    public void onCreate(Bundle savedInstanceState) {
-                        super.onCreate(savedInstanceState);
-                        addPreferencesFromResource(R.xml.settings_general);
-                        findPreference("about").setOnPreferenceClickListener(
-                                new Preference.OnPreferenceClickListener() {
-                                    @Override
-                                    public boolean onPreferenceClick(Preference preference) {
-                                        //config About Library
-                                        new Libs.Builder().withActivityTitle("About").withFields(R.string.class.getFields()).start(getActivity());
-                                        return false;
-                                    }
-                                });
-                    }
                 };
                 break;
         }
