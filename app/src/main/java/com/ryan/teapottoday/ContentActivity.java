@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -29,31 +30,46 @@ import com.ryan.teapottoday.model.VolleyController;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ContentActivity extends Activity {
 
-    private ViewPager vpContent;
     private float mLastY;
-    private PullToZoomScrollView svContent;
     private MyVPContentPagerAdapter myVPContentPagerAdapter;
     private static final int RECEIVE_JSON = 2;
     private ArrayList<String> teapotImgsList;
     private String artimg;
     private String dirtImg;
-    private SelectableRoundedImageView imgArtisan;
-    private SelectableRoundedImageView imgDirt;
-    private TextView tvDirt;
-    private TextView tvArtisan;
-    private TextView tvDirtName;
-    private TextView tvArtisanName;
-    private Button btnBack;
-    private boolean debug = false;
     private String[] arrs;
 
+
     private String contentDir = "http://10.0.3.2:8080/mywebapps/content_detail2";
+
+    @Bind(R.id.content_share)
+    Button btnShare;
+    @Bind(R.id.btn_back)
+    Button btnBack;
+    @Bind(R.id.tv_dirt_intro)
+    TextView tvDirt;
+    @Bind(R.id.tv_artisan_intro)
+    TextView tvArtisan;
+    @Bind(R.id.tv_dirt_name)
+    TextView tvDirtName;
+    @Bind(R.id.tv_artisan_name)
+    TextView tvArtisanName;
+    @Bind(R.id.vp_content)
+    ViewPager vpContent;
+    @Bind(R.id.sv_content)
+    PullToZoomScrollView svContent;
+
+    @Bind(R.id.detail_round_img_artisan)
+    SelectableRoundedImageView imgArtisan;
+    @Bind(R.id.detail_round_img_dirt)
+    SelectableRoundedImageView imgDirt;
 
 
     @SuppressWarnings("unchecked")
@@ -80,6 +96,7 @@ public class ContentActivity extends Activity {
                     ImageCacheManager.loadImage(ContentActivity.this, contentDir + artImg, imgArtisan, defaultImage, errorImage);
                     ImageCacheManager.loadImage(ContentActivity.this, contentDir + dirtImg, imgDirt, defaultImage, errorImage);
 
+
                     tvDirt.setText(dirtIntro);
                     tvArtisan.setText(artisanIntro);
                     tvDirtName.setText(dirtName);
@@ -94,12 +111,15 @@ public class ContentActivity extends Activity {
         }
     };
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_layout);
+        ButterKnife.bind(this);
 
-        btnBack = (Button) findViewById(R.id.btn_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,19 +129,6 @@ public class ContentActivity extends Activity {
 
         Intent intentFrom = getIntent();
         String url = intentFrom.getStringExtra("url");
-
-
-
-
-
-
-
-        imgArtisan = (SelectableRoundedImageView) findViewById(R.id.detail_round_img_artisan);
-        imgDirt = (SelectableRoundedImageView) findViewById(R.id.detail_round_img_dirt);
-        tvDirt = (TextView) findViewById(R.id.tv_dirt_intro);
-        tvArtisan = (TextView) findViewById(R.id.tv_artisan_intro);
-        tvDirtName = (TextView) findViewById(R.id.tv_dirt_name);
-        tvArtisanName = (TextView) findViewById(R.id.tv_artisan_name);
 
         teapotImgsList = new ArrayList<>();
 
@@ -136,8 +143,7 @@ public class ContentActivity extends Activity {
             }
         }
 
-        vpContent = (ViewPager) findViewById(R.id.vp_content);
-        svContent = (PullToZoomScrollView) findViewById(R.id.sv_content);
+
 //        myVPContentPagerAdapter = new MyVPContentPagerAdapter(this,contentDir,teapotImgsList);
 //        vpContent.setAdapter(myVPContentPagerAdapter);
     }
@@ -148,7 +154,7 @@ public class ContentActivity extends Activity {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String response) {
-                if (debug) {
+                if (BuildConfig.DEBUG) {
                     Log.e("jsonresponse", response);
                 }
 
@@ -210,7 +216,7 @@ public class ContentActivity extends Activity {
             teapotImgsList.add(dirtName);
             teapotImgsList.add(artisanName);
 
-            if (debug) {
+            if (BuildConfig.DEBUG) {
                 Log.e("jsonresponse", teapotIntro);
                 Log.e("jsonresponse", dirtIntro);
             }
@@ -218,7 +224,7 @@ public class ContentActivity extends Activity {
 
             for (int i = 0; i < teapotImgs.length(); i++) {
                 teapotImgsList.add((String) teapotImgs.get(i));
-                if (debug) {
+                if (BuildConfig.DEBUG) {
                     Log.e("jsonresponse", (String) teapotImgs.get(i));
                 }
 

@@ -2,6 +2,7 @@ package com.ryan.teapottoday;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -27,6 +28,7 @@ import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
 import com.ryan.teapottoday.fragments.HistoryFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
+import com.ryan.teapottoday.fragments.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       /* Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);*/
 
         initDatabase();
 
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = new ProductionFragment();
                 break;
             case R.id.nav_settings:
-                fragment = new PreferenceFragment() {
+                fragment = new SettingsFragment() {
 
                 };
                 break;
