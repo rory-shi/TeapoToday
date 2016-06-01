@@ -9,7 +9,7 @@
         <item name="android:colorAccent">@color/colorAccent</item>
 
         <item name="android:actionModeBackground">@color/colorToolBar</item>
-        <item name="android:actionModeCloseDrawable">@drawable/back</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_back</item>
         <item name="android:actionBarStyle">@style/DiyActionBarStyle</item>
     </style>
 

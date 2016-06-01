@@ -56,7 +56,7 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/shengtao_dirt"
                         app:sriv_border_color="#ffffff"
-                        app:sriv_border_width="5dip"
+                        app:sriv_border_width="2dip"
                         app:sriv_left_bottom_corner_radius="48dip"
                         app:sriv_left_top_corner_radius="16dip"
                         app:sriv_oval="true"
