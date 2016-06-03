@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
@@ -50,6 +52,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initView();
 
         initEvent();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                boolean refresh = data.getExtras().getBoolean("refresh");
+                if (refresh) {
+                    Toast.makeText(this, "需要刷新页面", Toast.LENGTH_SHORT).show();
+                    initView();
+                    initEvent();
+                }
+            }
+        }
     }
 
     private void initDatabase() {

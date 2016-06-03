@@ -3,6 +3,7 @@ package com.ryan.teapottoday.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -153,7 +154,6 @@ public class FirstPageFragment extends Fragment {
 
         return view;
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

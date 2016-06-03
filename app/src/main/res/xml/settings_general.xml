@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+
     <PreferenceCategory android:title="Post">
         <!--<ListPreference android:title="Post Limit"-->
             <!--android:defaultValue="10"-->
@@ -41,11 +43,8 @@
                 <!--android:data="market://details?id=xxxxxx"/>-->
 
         <!--</PreferenceScreen>-->
-        <!--<PreferenceScreen android:title="Feedback"-->
-            <!--android:summary="xxxxx@xxxx.com">-->
-            <!--<intent-->
-                <!--android:action="android.intent.action.VIEW"-->
-                <!--android:data="mailto:xxxxx@xxxx.com?subject=WallpaperAppFeedback"/>-->
-        <!--</PreferenceScreen>-->
+        <PreferenceScreen android:title="Feedback"
+            android:key="feedback">
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

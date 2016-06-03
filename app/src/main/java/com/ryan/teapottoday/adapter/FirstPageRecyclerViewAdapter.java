@@ -1,5 +1,6 @@
 package com.ryan.teapottoday.adapter;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -87,7 +88,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FirstPageRecyclerViewAdapter(Context context, ArrayList<String> myDataset) {
+    public FirstPageRecyclerViewAdapter(Activity context, ArrayList<String> myDataset) {
         mContext = context;
         mDataset = myDataset;
 
@@ -151,11 +152,12 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                 if (debug) {
                     Log.e("url",url);
                 }
-                mContext.startActivity(intent);
+                ((Activity)mContext).startActivityForResult(intent, 1);
             }
         });
         return vh;
     }
+
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override

@@ -1,7 +1,11 @@
 package com.ryan.teapottoday;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.joooonho.SelectableRoundedImageView;
 import com.ryan.teapottoday.adapter.MyVPContentPagerAdapter;
+import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.diyView.PullToZoomScrollView;
 import com.ryan.teapottoday.model.ImageCacheManager;
 import com.ryan.teapottoday.model.VolleyController;
@@ -67,7 +72,8 @@ public class ContentActivity extends Activity {
     ViewPager vpContent;
     @Bind(R.id.sv_content)
     PullToZoomScrollView svContent;
-
+    @Bind(R.id.btn_fav)
+    Button btnFav;
     @Bind(R.id.detail_round_img_artisan)
     SelectableRoundedImageView imgArtisan;
     @Bind(R.id.detail_round_img_dirt)
@@ -104,6 +110,7 @@ public class ContentActivity extends Activity {
                     tvDirtName.setText(dirtName);
                     tvArtisanName.setText(artisanName);
 
+
                     vpContent.setAdapter(new MyVPContentPagerAdapter(ContentActivity.this, contentDir, teapotImgsList));
                     break;
                 }
@@ -138,7 +145,7 @@ public class ContentActivity extends Activity {
         });
 
         Intent intentFrom = getIntent();
-        String url = intentFrom.getStringExtra("url");
+        final String url = intentFrom.getStringExtra("url");
 
         teapotImgsList = new ArrayList<>();
 
@@ -153,6 +160,32 @@ public class ContentActivity extends Activity {
             }
         }
 
+
+
+
+        MyDatabaseHelper dbHelper = new MyDatabaseHelper(this,"TeapotToday.db",null,2);
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("Teapot", null, "url=?", new String[]{url}, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            btnFav.setBackgroundResource(R.drawable.ic_favorite);
+        } else {
+            btnFav.setBackgroundResource(R.drawable.ic_favorite_border_white);
+        }
+        cursor.close();
+
+        btnFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int row = db.delete("Teapot", "url = ?", new String[]{url});
+                v.setBackgroundResource(R.drawable.ic_favorite_border_white);
+                if (row == 0) {
+                    ContentValues values = new ContentValues();
+                    values.put("url",url);
+                    db.insert("Teapot", null, values);
+                    v.setBackgroundResource(R.drawable.ic_favorite);
+                }
+            }
+        });
 
 //        myVPContentPagerAdapter = new MyVPContentPagerAdapter(this,contentDir,teapotImgsList);
 //        vpContent.setAdapter(myVPContentPagerAdapter);
@@ -323,4 +356,13 @@ public class ContentActivity extends Activity {
         return true;
     }*/
 
+
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("refresh", true);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+        //super.onBackPressed();
+    }
 }
