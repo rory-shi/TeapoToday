@@ -97,8 +97,8 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                 ivContentDetail.setMinimumWidth(getActivity().getResources().getDisplayMetrics().widthPixels+200);
                 String url = urls.get(position);
 
-                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.demo);
-                Bitmap errorImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.hee);
+                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
+                Bitmap errorImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
                 ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, errorImage);
 
                 final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();

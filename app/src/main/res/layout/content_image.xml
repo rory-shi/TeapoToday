@@ -6,6 +6,6 @@
         android:id="@+id/iv_content_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/demo"
+        android:src="@drawable/default_img"
         android:scaleType="centerCrop"/>
 </FrameLayout>

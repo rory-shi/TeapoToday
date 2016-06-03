@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,12 +34,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class HistoryFragment extends Fragment {
 //    private TextViewVertical tv;
 //    private HorizontalScrollView sv;
-    private ViewPager historyViewPager;
+
+    @Bind(R.id.vp_history)
+    ViewPager historyViewPager;
+   // private ViewPager historyViewPager;
+    private List<View> viewList;
     private int[] ids = {R.drawable.history_song,R.drawable.history_ming,R.drawable.history_qing,R.drawable.history_now};
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,41 +65,25 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_history,container,false);
-        historyViewPager = (ViewPager) view.findViewById(R.id.vp_history);
-        List<View> viewList = new ArrayList<>();
+     //   historyViewPager = (ViewPager) view.findViewById(R.id.vp_history);
+        ButterKnife.bind(this,view);
 
-
+        viewList = new ArrayList<>();
         for (int id : ids) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(id);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             viewList.add(iv);
+            historyViewPager.setAdapter(new HistoryViewPagerAdapter(viewList));
         }
-
-        historyViewPager.setAdapter(new HistoryViewPagerAdapter(viewList));
-
-       // tv = (TextViewVertical) view.findViewById(R.id.tv);
-        /*sv = (HorizontalScrollView) view.findViewById(R.id.sv);
-
-        //设置接口事件接收
-        Handler handler = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case TextViewVertical.LAYOUT_CHANGED:
-                        sv.scrollBy(tv.getTextWidth(), 0);//滚动到最右边
-                        break;
-                }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                handler.sendMessage(msg);
             }
-        };
-        tv.setHandler(handler);//将Handler绑定到TextViewVertical*/
+        });
 
-        //创建并设置字体（这里只是为了效果好看一些，但为了让网友们更容易下载，字体库并没有一同打包
-        //如果需要体验下效果的朋友可以自行在网络上搜索stxingkai.ttf并放入assets/fonts/中）
-        //Typeface face=Typeface.createFromAsset(getAssets(),"fonts/stxingkai.ttf");
-        //tv.setTypeface(face);
-
-        //设置文字内容
-       // tv.setText(getString(R.string.ICH_history_01));
         return view;
     }
 

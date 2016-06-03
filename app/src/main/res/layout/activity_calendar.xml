@@ -20,7 +20,7 @@
                 android:id="@+id/iv_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/demo"/>
+                android:src="@drawable/default_img"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

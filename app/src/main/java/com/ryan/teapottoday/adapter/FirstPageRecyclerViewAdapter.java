@@ -32,7 +32,6 @@ import java.util.ArrayList;
  */
 public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPageRecyclerViewAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
-   // private String[] mDateSet = {"4月13日\n三月初七", "4月12日\n三月初六", "4月11日\n三月初五", "4月10日\n三月初四", "4月9日\n三月初三", "4月8日\n三月初二", "4月7日\n三月初一", "4月6日\n二月廿九", "4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九","4月6日\n二月廿九",};
     public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
 
@@ -79,10 +78,10 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             }
         }
 
-        public static interface IMyViewHolderClicks {
-            public void onFavImgClicked(View caller);
+        public interface IMyViewHolderClicks {
+            void onFavImgClicked(View caller);
 
-            public void onImgClicked(View caller);
+            void onImgClicked(View caller);
         }
     }
 
@@ -177,35 +176,36 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 //            int dp = DensityUtil.px2dip(mContext,800);
 //            Log.e("dpdpdp",dp+"");
-            int px = DensityUtil.dip2px(mContext,400);
+            int px = DensityUtil.dip2px(mContext, 400);
             cvTop.getLayoutParams().height = px;
             cvTop.setAlpha(0);
-        } else if (position == 1) {
-            int px = DensityUtil.dip2px(mContext, 168);
-            cvTop.getLayoutParams().height = px;
-            ivPot.setVisibility(View.GONE);
-            tvDate.setVisibility(View.GONE);
-            ivFav.setVisibility(View.GONE);
-
-            tvTitle.setText(DateUtils.getToday("gregorian")+DateUtils.getToday("week"));
-            tvTitle.setTextSize(32);
-
-            tvContent.setTextSize(22);
-            tvContent.setText("农历"+DateUtils.getToday("lunar"));
-
         } else {
-            String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2);
-            cvTop.setTag(R.string.url_tag,url);
+            if (position == 1) {
+                int px = DensityUtil.dip2px(mContext, 168);
+                cvTop.getLayoutParams().height = px;
+                ivPot.setVisibility(View.GONE);
+                tvDate.setVisibility(View.GONE);
+               // ivFav.setVisibility(View.GONE);
+
+                tvTitle.setText(DateUtils.getToday("gregorian") + DateUtils.getToday("week"));
+                tvTitle.setTextSize(32);
+
+                tvContent.setTextSize(22);
+                tvContent.setText("农历" + DateUtils.getToday("lunar"));
+
+            }
+            String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 1);
+            cvTop.setTag(R.string.url_tag, url);
             ivPot.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             //get img from net
             setImageView(url, ivPot, position);
 
-            tvDate.setText(DateUtils.getDateAgo("", position-1));
+            tvDate.setText(DateUtils.getDateAgo("", position - 1));
 //            tvDate.setText(mDateSet[position - 2]);
 
-            Cursor cursor = db.query("Teapot", null,"url=?",new String[]{url},null,null,null,null );
-            if (cursor.moveToFirst()){
+            Cursor cursor = db.query("Teapot", null, "url=?", new String[]{url}, null, null, null, null);
+            if (cursor.moveToFirst()) {
                 ivFav.setBackgroundResource(R.drawable.ic_favorite);
             } else {
                 ivFav.setBackgroundResource(R.drawable.ic_favorite_border);
@@ -222,8 +222,8 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         imageLoader.get("http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2), listener, 200, 200);*/
 
 
-        Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-        Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
+        Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
+        Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
         ImageCacheManager.loadImage(mContext, url, ivPot, defaultImage, errorImage);
 
 
@@ -249,6 +249,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size() + 2;
+        return mDataset.size() + 1;
     }
 }

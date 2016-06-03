@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_first_page"
             android:icon="@drawable/ic_menu_today"
-            android:title="每日一壶" />
+            android:title="首页" />
         <item
             android:id="@+id/nav_collection"
             android:icon="@drawable/ic_menu_gallery"
@@ -17,7 +17,7 @@
         <item
             android:id="@+id/nav_production"
             android:icon="@drawable/ic_menu_production"
-            android:title="制作方式" />
+            android:title="工艺" />
 
     </group>
 

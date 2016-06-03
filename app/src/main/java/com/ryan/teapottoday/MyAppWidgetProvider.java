@@ -29,7 +29,7 @@ public class MyAppWidgetProvider extends android.appwidget.AppWidgetProvider {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Bitmap scrbBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.demo);
+                    Bitmap scrbBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_img);
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                     for (int i = 0; i<37;i++) {
                         float degree = (i*10)%360;

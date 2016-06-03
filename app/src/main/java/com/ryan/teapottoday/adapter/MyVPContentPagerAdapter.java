@@ -68,8 +68,8 @@ public class MyVPContentPagerAdapter extends PagerAdapter {
             view.setTag(url);
             ivContent = (ImageView) view.findViewById(R.id.iv_content_img);
 
-            Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-            Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
+            Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
+            Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
             ImageCacheManager.loadImage(mContext, url, ivContent, defaultImage, errorImage);
 
             ivContent.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -86,8 +86,8 @@ public class MyVPContentPagerAdapter extends PagerAdapter {
                     if (debug) {
                         Log.e("debug", url);
                     }
-                    Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-                    Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
+                    Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
+                    Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
                     ImageCacheManager.loadImage(mContext, url, ivContentDetail, defaultImage, errorImage);
 
                     final AlertDialog dialog = new AlertDialog.Builder(mContext).create();

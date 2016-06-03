@@ -61,8 +61,8 @@ public class CollectionItem extends RelativeLayout implements Checkable {
     }
     public void setImgUrl(String url) {
         if (mImgView != null) {
-            Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-            Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hee);
+            Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
+            Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
             ImageCacheManager.loadImage(mContext, url, mImgView, defaultImage, errorImage);
         }
     }

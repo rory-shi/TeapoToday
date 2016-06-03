@@ -64,17 +64,14 @@ public class FirstPageFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_FIRST_COLUMN: {
+                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
+                    ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
 
-                }
-                case RECEIVE_JSON:{
-                        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mImageView, "scaleX", 1.0f,1.3f);
-                        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mImageView, "scaleY", 1.0f,1.3f);
-
-                        AnimatorSet animSet = new AnimatorSet();
-                        animSet.play(scaleX).with(scaleY);
-                        animSet.setDuration(10000);
-                        animSet.start();
-                        switch ((timer++)%4) {
+                    AnimatorSet animSet = new AnimatorSet();
+                    animSet.play(scaleX).with(scaleY);
+                    animSet.setDuration(10000);
+                    animSet.start();
+                    switch ((timer++)%4) {
                         case 0:
                             mImageView.setImageResource(R.drawable.first03);
                             break;
@@ -91,8 +88,10 @@ public class FirstPageFragment extends Fragment {
                             break;
                     }
                     mSrl.setRefreshing(false);
-
-
+                    handler.sendEmptyMessageDelayed(UPDATE_FIRST_COLUMN,10000);
+                    break;
+                }
+                case RECEIVE_JSON:{
                     myDataset = (ArrayList<String>) msg.obj;
                     mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),myDataset);
                     mRecyclerView.setAdapter(mRVAdapter);
@@ -126,6 +125,8 @@ public class FirstPageFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+
         mSrl.setColorSchemeColors(R.color.colorPrimary);
         mSrl.setProgressViewOffset(false, 100, 100 + (int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
@@ -133,51 +134,22 @@ public class FirstPageFragment extends Fragment {
         mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                handler.postDelayed(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         receiveJsonFromNetwork();
-                        //mRecyclerView.setAdapter(mRVAdapter);
                         mRecyclerView.invalidate();
 
-                        /*
-                        List<InstanceBean> temp=new ArrayList<InstanceBean>();
-                        for(inti=0;i<5;i++){
-                             InstanceBean bean=new InstanceBean("我是杨颖Item"+i,R.drawable.baby);
-                             temp.add(bean);
-                        }
-                        adapter.addRefreshBeans(temp);
-                        **/
+
                     }
-                }, 2400);
+                });
 
             }
         });
 
         // specify an adapter (see also next example)
-        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), myDataset);
-        mRecyclerView.setAdapter(mRVAdapter);
-
-
-      /*  mRecyclerView.addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mRVAdapter.getItemCount()) {
-                    mSrl.setRefreshing(true);
-
-                    receiveJsonFromNetwork();
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-
-            }
-        });*/
-        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), myDataset);
+//        mRecyclerView.setAdapter(mRVAdapter);
 
         return view;
     }
@@ -212,6 +184,7 @@ public class FirstPageFragment extends Fragment {
                         ArrayList<String> myData = handleResponse(response);
                         msg.obj = myData;
                         handler.sendMessage(msg);
+                        handler.sendEmptyMessage(UPDATE_FIRST_COLUMN);
                     }
                 }).start();
 
