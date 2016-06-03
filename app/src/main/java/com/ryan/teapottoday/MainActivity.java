@@ -3,32 +3,23 @@ package com.ryan.teapottoday;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.mikepenz.aboutlibraries.Libs;
+import android.widget.ImageView;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.fragments.CollectionFragment;
 import com.ryan.teapottoday.fragments.FirstPageFragment;
 import com.ryan.teapottoday.fragments.HistoryFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
 import com.ryan.teapottoday.fragments.SettingsFragment;
+import com.ryan.teapottoday.utils.PreferenceUtils;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
     private int drawerItemId;
+    private ImageView headImageView;
 
     private MyDatabaseHelper dbHelper;
 
@@ -47,8 +39,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        if (! PreferenceUtils.getPrefBoolean(getApplication(),"isLogin",false)) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
 
         initDatabase();
 
@@ -69,6 +64,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //mFab = (FloatingActionButton) findViewById(R.id.fab);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        headImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.iv_head);
+
+        headImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initEvent() {

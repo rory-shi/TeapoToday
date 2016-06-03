@@ -1,6 +1,8 @@
 package com.ryan.teapottoday;
 
         import android.app.ProgressDialog;
+        import android.database.Cursor;
+        import android.database.sqlite.SQLiteDatabase;
         import android.os.Bundle;
         import android.support.v7.app.AppCompatActivity;
         import android.util.Log;
@@ -11,6 +13,9 @@ package com.ryan.teapottoday;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.Toast;
+
+        import com.ryan.teapottoday.database.IDDBHelper;
+        import com.ryan.teapottoday.utils.PreferenceUtils;
 
         import butterknife.ButterKnife;
         import butterknife.Bind;
@@ -24,11 +29,15 @@ public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.btn_login) Button _loginButton;
     @Bind(R.id.link_signup) TextView _signupLink;
 
+    private IDDBHelper iddbHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        iddbHelper = new IDDBHelper(this,"UserStore.db",null,1);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -66,20 +75,32 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
 
         final String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        if (loginSuccess(email,password)) {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
+    }
+
+    private boolean loginSuccess(String email,String password) {
+        SQLiteDatabase db = iddbHelper.getWritableDatabase();
+        String sql = "select * from userData where email=? and password=?";
+        Cursor cursor = db.rawQuery(sql, new String[] {email, password});
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return true;
+        }
+        return false;
     }
 
 
@@ -90,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                this.finish();
+                //this.finish();
             }
         }
     }
@@ -103,12 +124,14 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+        PreferenceUtils.setPrefBoolean(getApplication(),"isLogin",true);
         finish();
     }
 
+
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        PreferenceUtils.setPrefBoolean(getApplication(), "isLogin", false);
         _loginButton.setEnabled(true);
     }
 

@@ -1,6 +1,8 @@
 package com.ryan.teapottoday;
 
         import android.app.ProgressDialog;
+        import android.content.ContentValues;
+        import android.database.sqlite.SQLiteDatabase;
         import android.os.Bundle;
         import android.support.v7.app.AppCompatActivity;
         import android.util.Log;
@@ -9,6 +11,8 @@ package com.ryan.teapottoday;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.Toast;
+
+        import com.ryan.teapottoday.database.IDDBHelper;
 
         import butterknife.Bind;
         import butterknife.ButterKnife;
@@ -22,12 +26,15 @@ public class SignupActivity extends AppCompatActivity {
     @Bind(R.id.btn_signup) Button _signupButton;
     @Bind(R.id.link_login) TextView _loginLink;
 
+    private IDDBHelper iddbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        iddbHelper = new IDDBHelper(this,"UserStore.db",null,1);
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,18 +68,28 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String name = _nameText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        //signup logic
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
+                        SQLiteDatabase db = iddbHelper.getWritableDatabase();
+                        //db.execSQL("insert into userData (name,email,password) values (?,?,?)");
+                        ContentValues values = new ContentValues();
+                        values.put("name",name);
+                        values.put("email",email);
+                        values.put("password",password);
+                        db.insert("userData",null,values);
+                        values.clear();
                         // depending on success
                         onSignupSuccess();
+
+
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
