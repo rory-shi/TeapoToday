@@ -62,10 +62,14 @@ public class ContentActivity extends Activity {
     Button btnBack;
     @Bind(R.id.tv_dirt_intro)
     TextView tvDirt;
+    @Bind(R.id.tv_teapot_intro)
+    TextView tvTeapotIntro;
     @Bind(R.id.tv_artisan_intro)
     TextView tvArtisan;
     @Bind(R.id.tv_dirt_name)
     TextView tvDirtName;
+    @Bind(R.id.tv_teapot_name)
+    TextView tvTeapotName;
     @Bind(R.id.tv_artisan_name)
     TextView tvArtisanName;
     @Bind(R.id.vp_content)
@@ -98,6 +102,7 @@ public class ContentActivity extends Activity {
                     String artisanIntro = teapotImgsList.get(4);
                     String dirtName = teapotImgsList.get(5);
                     String artisanName = teapotImgsList.get(6);
+                    String teapotName = teapotImgsList.get(7);
 
                     Bitmap defaultImage = BitmapFactory.decodeResource(ContentActivity.this.getResources(), R.drawable.default_img);
                     Bitmap errorImage = BitmapFactory.decodeResource(ContentActivity.this.getResources(), R.drawable.default_img);
@@ -109,7 +114,8 @@ public class ContentActivity extends Activity {
                     tvArtisan.setText(artisanIntro);
                     tvDirtName.setText(dirtName);
                     tvArtisanName.setText(artisanName);
-
+                    tvTeapotIntro.setText(teapotIntro);
+                    tvTeapotName.setText(teapotName);
 
                     vpContent.setAdapter(new MyVPContentPagerAdapter(ContentActivity.this, contentDir, teapotImgsList));
                     break;
@@ -272,11 +278,13 @@ public class ContentActivity extends Activity {
             String artisanIntro = jsonText.getString("artisan_intro");
             String artisanName = jsonText.getString("artisan_name");
             String dirtName = jsonText.getString("dirt_name");
+            String teapotName = jsonText.getString("name");
             teapotImgsList.add(teapotIntro);
             teapotImgsList.add(dirtIntro);
             teapotImgsList.add(artisanIntro);
             teapotImgsList.add(dirtName);
             teapotImgsList.add(artisanName);
+            teapotImgsList.add(teapotName);
 
             if (BuildConfig.DEBUG) {
                 Log.e("jsonresponse", teapotIntro);

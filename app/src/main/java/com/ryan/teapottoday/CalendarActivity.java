@@ -12,7 +12,5 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        svCalendar = (FixParallaxScrollView) findViewById(R.id.sv_calendar);
-        svCalendar.setParallaxImageView((ImageView) findViewById(R.id.iv_calendar));
     }
 }

@@ -3,7 +3,7 @@
 
 
 
-    <PreferenceCategory android:title="Post">
+    <PreferenceCategory android:title="缓存">
         <!--<ListPreference android:title="Post Limit"-->
             <!--android:defaultValue="10"-->
             <!--android:entryValues="@array/settings_entry_values_post_limit"-->
@@ -29,9 +29,9 @@
             <!--android:summaryOff="Warning! You may need be more careful!"/>-->
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="About">
+    <PreferenceCategory android:title="关于">
 
-        <PreferenceScreen android:title="Open Source"
+        <PreferenceScreen android:title="开源组件"
             android:key="about">
         </PreferenceScreen>
 
@@ -43,7 +43,7 @@
                 <!--android:data="market://details?id=xxxxxx"/>-->
 
         <!--</PreferenceScreen>-->
-        <PreferenceScreen android:title="Feedback"
+        <PreferenceScreen android:title="邮件反馈"
             android:key="feedback">
         </PreferenceScreen>
     </PreferenceCategory>

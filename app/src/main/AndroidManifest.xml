@@ -48,7 +48,7 @@
             </intent-filter>
         </receiver>
 
-        <!--<activity android:name=".CalendarActivity"></activity>-->
+        <activity android:name=".CalendarActivity"></activity>
         <activity android:name=".LoginActivity" android:theme="@style/AppTheme" />
         <activity android:name=".SignupActivity" android:theme="@style/AppTheme" />
 

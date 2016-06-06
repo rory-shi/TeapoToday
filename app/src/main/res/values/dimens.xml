@@ -10,4 +10,6 @@
 
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="size_default_height">240dp</dimen>
+    <dimen name="tv_padding_left">10dp</dimen>
+    <dimen name="tv_padding_right">10dp</dimen>
 </resources>

@@ -16,9 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ryan.teapottoday.CalendarActivity;
 import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
@@ -32,13 +30,19 @@ import java.util.ArrayList;
  * Created by rory9 on 2016/4/3.
  */
 public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPageRecyclerViewAdapter.ViewHolder> {
-    private ArrayList<String> mDataset;
+    private ArrayList<String> mImgDataSet;
+    private ArrayList<String> mNameDataSet;
+    private ArrayList<String> mBriefDataSet;
     public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
 
     private MyDatabaseHelper dbHelper;
     private SQLiteDatabase db;
     private boolean debug = false;
+
+    public static final int MY_IMG_DATA_SET_NUM = 0;
+    public static final int MY_NAME_DATA_SET_NUM = 1;
+    public static final int MY_BRIEF_DATA_SET_NUM = 2;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -88,9 +92,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FirstPageRecyclerViewAdapter(Activity context, ArrayList<String> myDataset) {
+    public FirstPageRecyclerViewAdapter(Activity context, ArrayList<ArrayList<String>> myDataset) {
         mContext = context;
-        mDataset = myDataset;
+        mImgDataSet = myDataset.get(MY_IMG_DATA_SET_NUM);
+        mNameDataSet = myDataset.get(MY_NAME_DATA_SET_NUM);
+        mBriefDataSet = myDataset.get(MY_BRIEF_DATA_SET_NUM);
 
 
         dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
@@ -182,21 +188,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             cvTop.getLayoutParams().height = px;
             cvTop.setAlpha(0);
         } else {
-            if (position == 1) {
-                int px = DensityUtil.dip2px(mContext, 168);
-                cvTop.getLayoutParams().height = px;
-                ivPot.setVisibility(View.GONE);
-                tvDate.setVisibility(View.GONE);
-               // ivFav.setVisibility(View.GONE);
 
-                tvTitle.setText(DateUtils.getToday("gregorian") + DateUtils.getToday("week"));
-                tvTitle.setTextSize(32);
+            tvTitle.setText(mNameDataSet.get(position-1));
+            tvContent.setText(mBriefDataSet.get(position-1));
 
-                tvContent.setTextSize(22);
-                tvContent.setText("农历" + DateUtils.getToday("lunar"));
-
-            }
-            String url = "http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 1);
+            String url = "http://10.0.3.2:8080/mywebapps/" + mImgDataSet.get(position - 1);
             cvTop.setTag(R.string.url_tag, url);
             ivPot.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -213,15 +209,26 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                 ivFav.setBackgroundResource(R.drawable.ic_favorite_border);
             }
             cursor.close();
+
+            if (position == 1) {
+                int px = DensityUtil.dip2px(mContext, 168);
+                cvTop.getLayoutParams().height = px;
+                ivPot.setVisibility(View.GONE);
+                tvDate.setVisibility(View.GONE);
+                // ivFav.setVisibility(View.GONE);
+
+                tvTitle.setText(DateUtils.getToday("gregorian") + DateUtils.getToday("week"));
+                tvTitle.setTextSize(32);
+
+                tvContent.setTextSize(22);
+                tvContent.setText("农历" + DateUtils.getToday("lunar"));
+
+            }
         }
 
     }
 
     private void setImageView(String url, ImageView ivPot, int position) {
-        /*RequestQueue mQueue = Volley.newRequestQueue(mContext);
-        ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapLruImageCache(10*1024*1024));
-        ImageLoader.ImageListener listener = ImageLoader.getImageListener(ivPot, R.drawable.demo, R.drawable.hee);
-        imageLoader.get("http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2), listener, 200, 200);*/
 
 
         Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
@@ -231,26 +238,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
     }
 
-    /*private void setImageView(final ImageView ivPot,int position) {
-        RequestQueue mQueue = Volley.newRequestQueue(mContext);
-            ImageRequest imageRequest = new ImageRequest("http://10.0.3.2:8080/mywebapps/" + mDataset.get(position - 2), new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-                    ivPot.setImageBitmap(response);
-                }
-            }, 0, 0, Bitmap.Config.RGB_565, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    ivPot.setImageResource(R.drawable.demo);
-                }
-            });
-            mQueue.add(imageRequest);
-    }*/
-
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size() + 1;
+        return mImgDataSet.size() + 1;
     }
 }

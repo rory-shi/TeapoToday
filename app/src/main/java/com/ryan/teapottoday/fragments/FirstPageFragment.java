@@ -3,15 +3,12 @@ package com.ryan.teapottoday.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +47,6 @@ public class FirstPageFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mRVAdapter;
     private LinearLayoutManager mLayoutManager;
-    private ArrayList<String> myDataset;
 
     private SwipeRefreshLayout mSrl;
     private ImageView mImageView;
@@ -93,8 +89,7 @@ public class FirstPageFragment extends Fragment {
                     break;
                 }
                 case RECEIVE_JSON:{
-                    myDataset = (ArrayList<String>) msg.obj;
-                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),myDataset);
+                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), (ArrayList<ArrayList<String>>) msg.obj);
                     mRecyclerView.setAdapter(mRVAdapter);
 
                     mSrl.setRefreshing(false);
@@ -148,17 +143,12 @@ public class FirstPageFragment extends Fragment {
             }
         });
 
-        // specify an adapter (see also next example)
-//        mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), myDataset);
-//        mRecyclerView.setAdapter(mRVAdapter);
-
         return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myDataset = new ArrayList<>();
 
         //get json
         receiveJsonFromNetwork();
@@ -179,11 +169,17 @@ public class FirstPageFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
                         Message msg = new Message();
                         msg.what = RECEIVE_JSON;
-                        ArrayList<String> myData = handleResponse(response);
-                        msg.obj = myData;
+                        ArrayList<ArrayList<String>> dataSet =  new ArrayList<>();
+                        dataSet.add(handleResponseWithKey(response, "MyTeaPot"));
+                        dataSet.add(handleResponseWithKey(response, "TeapotName"));
+                        dataSet.add(handleResponseWithKey(response, "TeapotBrief"));
+
+                        msg.obj = dataSet;
                         handler.sendMessage(msg);
+
                         handler.sendEmptyMessage(UPDATE_FIRST_COLUMN);
                     }
                 }).start();
@@ -199,18 +195,22 @@ public class FirstPageFragment extends Fragment {
         queue.add(stringRequest);
     }
 
-    private ArrayList<String> handleResponse(String response) {
+    private ArrayList<String> handleResponseWithKey(String response, String key) {
+        ArrayList<String> myImageDataSet = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonArray = jsonObject.getJSONArray("MyTeaPot");
-            myDataset.clear();
+
+            JSONArray jsonArray = jsonObject.getJSONArray(key);
+            myImageDataSet.clear();
             for (int i =0; i < jsonArray.length(); i ++) {
-                myDataset.add((String) jsonArray.get(i));
+                myImageDataSet.add((String) jsonArray.get(i));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return myDataset;
+
+        return myImageDataSet;
     }
 
 

@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="260dp"
             android:src="@drawable/default_img"
+            android:background="#fff"
             android:elevation="15dp"/>
         <TextView
             android:id="@+id/tv_date_card"
@@ -38,26 +39,24 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
 
-            android:text="这是一段茶壶标题示例介绍内容"
+            android:text="宜兴紫砂壶名家谢曼伦『小桑宝』紫砂壶"
             android:gravity="center_vertical"
             android:textSize="15sp"
             android:textStyle="bold"
-
             android:layout_marginLeft="16dp"
             android:layout_below="@id/iv_in_cv"
-            android:elevation="15dp"/>
+            android:elevation="0dp"/>
         <TextView
             android:id="@+id/tv_content_in_cv"
             android:layout_width="match_parent"
             android:layout_height="30dp"
 
-            android:text="这是一段茶壶内容示例介绍内容"
+            android:text="此壶用墨绿泥制作，色泽沉静细润。壶身、壶盖均由桑叶构成。"
             android:gravity="center_vertical"
             android:textSize="12sp"
-
             android:layout_marginLeft="16dp"
             android:layout_below="@id/tv_title_in_cv"
-            android:elevation="15dp" />
+            android:elevation="0dp" />
         <ImageView
             android:id="@+id/fav_in_cv"
             android:layout_width="32dp"
@@ -68,6 +67,7 @@
             android:layout_marginTop="24dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:background="#fff"
             android:elevation="18dp"
             />
         <!--<com.joooonho.SelectableRoundedImageView-->

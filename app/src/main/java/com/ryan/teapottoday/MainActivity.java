@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*Intent intentCalendar = new Intent(this, CalendarActivity.class);
+        startActivity(intentCalendar);*/
+
         if (! PreferenceUtils.getPrefBoolean(getApplication(),"isLogin",false)) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == RESULT_OK) {
                 boolean refresh = data.getExtras().getBoolean("refresh");
                 if (refresh) {
-                    Toast.makeText(this, "需要刷新页面", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "需要刷新页面", Toast.LENGTH_SHORT).show();
                     initView();
                     initEvent();
                 }

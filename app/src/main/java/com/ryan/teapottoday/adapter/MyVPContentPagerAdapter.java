@@ -59,7 +59,7 @@ public class MyVPContentPagerAdapter extends PagerAdapter {
         teapotImgsList = imgs;
 
 
-        for (int i = 7; i < teapotImgsList.size(); i++) {
+        for (int i = 8; i < teapotImgsList.size(); i++) {
             LayoutInflater lf = LayoutInflater.from(mContext);
             View view = lf.inflate(R.layout.content_image, null);
 

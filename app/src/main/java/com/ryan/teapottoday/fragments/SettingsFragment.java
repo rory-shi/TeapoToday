@@ -25,10 +25,10 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View v = inflater.inflate(R.layout.preference_head,container,false);
         //Set night-mode or other UI changes
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return v;
     }
 
     @Override
