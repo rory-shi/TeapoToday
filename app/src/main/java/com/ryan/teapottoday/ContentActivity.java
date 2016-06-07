@@ -105,9 +105,8 @@ public class ContentActivity extends Activity {
                     String teapotName = teapotImgsList.get(7);
 
                     Bitmap defaultImage = BitmapFactory.decodeResource(ContentActivity.this.getResources(), R.drawable.default_img);
-                    Bitmap errorImage = BitmapFactory.decodeResource(ContentActivity.this.getResources(), R.drawable.default_img);
-                    ImageCacheManager.loadImage(ContentActivity.this, contentDir + artImg, imgArtisan, defaultImage, errorImage);
-                    ImageCacheManager.loadImage(ContentActivity.this, contentDir + dirtImg, imgDirt, defaultImage, errorImage);
+                    ImageCacheManager.loadImage(ContentActivity.this, contentDir + artImg, imgArtisan, defaultImage, defaultImage);
+                    ImageCacheManager.loadImage(ContentActivity.this, contentDir + dirtImg, imgDirt, defaultImage, defaultImage);
 
 
                     tvDirt.setText(dirtIntro);

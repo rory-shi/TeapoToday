@@ -3,6 +3,8 @@ package com.ryan.teapottoday.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,18 +17,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.FirstPageRecyclerViewAdapter;
+import com.ryan.teapottoday.model.ImageCacheManager;
 import com.ryan.teapottoday.model.VolleyController;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,23 +48,25 @@ import org.json.JSONObject;
  */
 public class FirstPageFragment extends Fragment {
 
-    public static final String TAG = "FirstPageFragmentTAG";
     public static final int UPDATE_FIRST_COLUMN = 1;
     private static final int RECEIVE_JSON = 2;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mRVAdapter;
-    private LinearLayoutManager mLayoutManager;
 
     private SwipeRefreshLayout mSrl;
     private ImageView mImageView;
 
-    private ScheduledExecutorService sche;
+    private Bitmap defaultImage;
+
+    private ArrayList<String> headUrl;
+
     private int timer = 0;
     private int lastVisibleItem ;
 
+
     //handler
     private Handler handler = new Handler(){
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -68,33 +78,31 @@ public class FirstPageFragment extends Fragment {
                     animSet.play(scaleX).with(scaleY);
                     animSet.setDuration(10000);
                     animSet.start();
-                    switch ((timer++)%4) {
-                        case 0:
-                            mImageView.setImageResource(R.drawable.first03);
-                            break;
-                        case 1:
-                            mImageView.setImageResource(R.drawable.first02);
-                            break;
-                        case 2:
-                            mImageView.setImageResource(R.drawable.first04);
-                            break;
-                        case 3:
-                            mImageView.setImageResource(R.drawable.first01);
-                            break;
-                        default:
-                            break;
-                    }
-                    mSrl.setRefreshing(false);
-                    handler.sendEmptyMessageDelayed(UPDATE_FIRST_COLUMN,10000);
+
+                    String content = "http://10.0.3.2:8080/mywebapps/";
+                    headUrl = (ArrayList<String>) msg.obj;
+
+                    ImageCacheManager.loadImage(getActivity(), content + headUrl.get((timer++) % 4), mImageView, defaultImage, defaultImage);
+
+//                    handler.sendEmptyMessageDelayed(UPDATE_FIRST_COLUMN,10000);
+
+                    Message headMsg = new Message();
+                    headMsg.what = UPDATE_FIRST_COLUMN;
+                    headMsg.obj = headUrl;
+                    handler.sendMessageDelayed(headMsg, 10000);
+
                     break;
                 }
                 case RECEIVE_JSON:{
-                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), (ArrayList<ArrayList<String>>) msg.obj);
+                    RecyclerView.Adapter mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), (ArrayList<ArrayList<String>>) msg.obj);
                     mRecyclerView.setAdapter(mRVAdapter);
 
                     mSrl.setRefreshing(false);
                     break;
                 }
+
+                default:
+                    break;
             }
 
 
@@ -109,19 +117,21 @@ public class FirstPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first_page,container,false);
         mImageView = (ImageView) view.findViewById(R.id.img_first_page);
+        //mImageView.setScaleType(ImageView.ScaleType.FIT_END);
+
+        defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), getResources().getColor(R.color.colorBackground));
+
+
         mSrl = (SwipeRefreshLayout) view.findViewById(R.id.srl_first_page);
 
-        mImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        mImageView.setImageResource(R.drawable.first03);
+
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         //init recycler view
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-
 
         mSrl.setColorSchemeColors(R.color.colorPrimary);
         mSrl.setProgressViewOffset(false, 100, 100 + (int) TypedValue
@@ -133,7 +143,7 @@ public class FirstPageFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        receiveJsonFromNetwork();
+                        receiveJsonFromNetwork(true);
                         mRecyclerView.invalidate();
 
 
@@ -151,15 +161,11 @@ public class FirstPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //get json
-        receiveJsonFromNetwork();
-
-
-        sche = Executors.newSingleThreadScheduledExecutor();
-        sche.scheduleAtFixedRate(new SlideShowTask(), 1, 10, TimeUnit.SECONDS);
+        receiveJsonFromNetwork(false);
 
     }
 
-    private void receiveJsonFromNetwork() {
+    private void receiveJsonFromNetwork(final boolean refresh) {
         RequestQueue queue = VolleyController.getInstance(getActivity()).getRequestQueue();
         String url = "http://10.0.3.2:8080/mywebapps/myjson.txt";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -170,17 +176,24 @@ public class FirstPageFragment extends Fragment {
                     @Override
                     public void run() {
 
-                        Message msg = new Message();
-                        msg.what = RECEIVE_JSON;
+                        Message listMsg = new Message();
+                        listMsg.what = RECEIVE_JSON;
                         ArrayList<ArrayList<String>> dataSet =  new ArrayList<>();
                         dataSet.add(handleResponseWithKey(response, "MyTeaPot"));
                         dataSet.add(handleResponseWithKey(response, "TeapotName"));
                         dataSet.add(handleResponseWithKey(response, "TeapotBrief"));
 
-                        msg.obj = dataSet;
-                        handler.sendMessage(msg);
+                        listMsg.obj = dataSet;
+                        handler.sendMessage(listMsg);
 
-                        handler.sendEmptyMessage(UPDATE_FIRST_COLUMN);
+                        if (!refresh) {
+                            Message headMsg = new Message();
+                            headMsg.what = UPDATE_FIRST_COLUMN;
+                            headMsg.obj = handleResponseWithKey(response,"HeadImages");
+                            handler.sendMessage(headMsg);
+                        }
+
+
                     }
                 }).start();
 
@@ -191,7 +204,19 @@ public class FirstPageFragment extends Fragment {
                 //由于文字没有缓存，所以连接错误直接全部不显示
                 Toast.makeText(getActivity(),"网络连接错误", Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    String str = new String(response.data, "UTF-8");
+                    return Response.success(str, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                } catch (Exception je) {
+                    return Response.error(new ParseError(je));
+                }
+            }
+        };
         queue.add(stringRequest);
     }
 
@@ -214,14 +239,4 @@ public class FirstPageFragment extends Fragment {
     }
 
 
-    private class SlideShowTask implements Runnable {
-
-        @Override
-        public void run() {
-            synchronized (mImageView) {
-                handler.obtainMessage().sendToTarget();
-            }
-        }
-
-    }
 }

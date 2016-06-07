@@ -33,7 +33,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     private ArrayList<String> mImgDataSet;
     private ArrayList<String> mNameDataSet;
     private ArrayList<String> mBriefDataSet;
-    public static int HELLO_ITEM_HEIGHT = 335;
     private Context mContext;
 
     private MyDatabaseHelper dbHelper;
@@ -232,8 +231,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 
         Bitmap defaultImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
-        Bitmap errorImage = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_img);
-        ImageCacheManager.loadImage(mContext, url, ivPot, defaultImage, errorImage);
+        ImageCacheManager.loadImage(mContext, url, ivPot, defaultImage, defaultImage);
 
 
     }

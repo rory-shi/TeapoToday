@@ -1,7 +1,9 @@
 package com.ryan.teapottoday.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -29,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ryan.teapottoday.BuildConfig;
+import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.GridViewImageAdapter;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
@@ -97,31 +101,37 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                 ivContentDetail.setMinimumWidth(getActivity().getResources().getDisplayMetrics().widthPixels+200);
                 String url = urls.get(position);
 
-                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
-                Bitmap errorImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
-                ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, errorImage);
+                Intent intent = new Intent(getActivity(), ContentActivity.class);
+                intent.putExtra("url", url);
+                if (BuildConfig.DEBUG) {
+                    Log.e("url",url);
+                }
+                getActivity().startActivityForResult(intent, 1);
 
-                final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
-
-                //ImageView img = (ImageView) imgEntryView.findViewById(R.id.demo);
-                //imageDownloader.download("图片地址", img); // 这个是加载网络图片的，可以是自己的图片设置方法
-                dialog.setView(imgEntryView); // 自定义dialog
-
-                Window dialogWindow = dialog.getWindow();
-                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                dialogWindow.setGravity(Gravity.CENTER);
-                lp.width = getActivity().getResources().getDisplayMetrics().widthPixels+200; // 宽度
-                //lp.height = 500; // 高度
-                dialogWindow.setAttributes(lp);
-
-
-                dialog.show();
-                // 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
-                imgEntryView.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View paramView) {
-                        dialog.cancel();
-                    }
-                });
+//                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
+//                ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, defaultImage);
+//
+//                final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+//
+//                //ImageView img = (ImageView) imgEntryView.findViewById(R.id.demo);
+//                //imageDownloader.download("图片地址", img); // 这个是加载网络图片的，可以是自己的图片设置方法
+//                dialog.setView(imgEntryView); // 自定义dialog
+//
+//                Window dialogWindow = dialog.getWindow();
+//                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//                dialogWindow.setGravity(Gravity.CENTER);
+//                lp.width = getActivity().getResources().getDisplayMetrics().widthPixels+200; // 宽度
+//                //lp.height = 500; // 高度
+//                dialogWindow.setAttributes(lp);
+//
+//
+//                dialog.show();
+//                // 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
+//                imgEntryView.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View paramView) {
+//                        dialog.cancel();
+//                    }
+//                });
             }
         });
 
