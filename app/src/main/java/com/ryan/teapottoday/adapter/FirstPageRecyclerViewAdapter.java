@@ -53,18 +53,25 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         public IMyViewHolderClicks mListener;
         private ImageView ivFavorite;
         private ImageView ivInCardView;
-
+        private TextView tvTitle;
+        private TextView tvContent;
+        private TextView tvDate;
 
         public ViewHolder(CardView v, IMyViewHolderClicks listener) {
             super(v);
 
 
+
             mListener = listener;
             mCardView = v;
             ivFavorite = (ImageView) v.findViewById(R.id.fav_in_cv);
+            ivInCardView = (ImageView) v.findViewById(R.id.iv_in_cv);
+            tvTitle = (TextView) v.findViewById(R.id.tv_title_in_cv);
+            tvContent = (TextView) v.findViewById(R.id.tv_content_in_cv);
+            tvDate = (TextView) v.findViewById(R.id.tv_date_card);
 
             ivFavorite.setOnClickListener(this);
-            ivInCardView = (ImageView) v.findViewById(R.id.iv_in_cv);
+
             ivInCardView.setOnClickListener(this);
             //v.setOnClickListener(this);
         }
@@ -174,11 +181,13 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 
         CardView cvTop = holder.mCardView;
-        TextView tvTitle = (TextView) cvTop.findViewById(R.id.tv_title_in_cv);
-        TextView tvContent = (TextView) cvTop.findViewById(R.id.tv_content_in_cv);
-        final ImageView ivPot = (ImageView) cvTop.findViewById(R.id.iv_in_cv);
-        TextView tvDate = (TextView) cvTop.findViewById(R.id.tv_date_card);
-        ImageView ivFav = (ImageView) cvTop.findViewById(R.id.fav_in_cv);
+        TextView tvTitle = holder.tvTitle;
+        TextView tvContent = holder.tvContent;
+        TextView tvDate = holder.tvDate;
+
+        ImageView ivPot = holder.ivInCardView;
+
+        ImageView ivFav = holder.ivFavorite;
         if (position == 0) {
 
 //            int dp = DensityUtil.px2dip(mContext,800);
