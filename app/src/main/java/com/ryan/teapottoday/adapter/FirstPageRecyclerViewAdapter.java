@@ -34,6 +34,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     private ArrayList<String> mNameDataSet;
     private ArrayList<String> mBriefDataSet;
     private Context mContext;
+    ArrayList<ArrayList<String>> mDataset;
 
     private MyDatabaseHelper dbHelper;
     private SQLiteDatabase db;
@@ -100,10 +101,13 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Provide a suitable constructor (depends on the kind of dataset)
     public FirstPageRecyclerViewAdapter(Activity context, ArrayList<ArrayList<String>> myDataset) {
         mContext = context;
-        mImgDataSet = myDataset.get(MY_IMG_DATA_SET_NUM);
-        mNameDataSet = myDataset.get(MY_NAME_DATA_SET_NUM);
-        mBriefDataSet = myDataset.get(MY_BRIEF_DATA_SET_NUM);
+        mDataset = myDataset;
 
+        if (0!= mDataset.size()) {
+            mImgDataSet = mDataset.get(MY_IMG_DATA_SET_NUM);
+            mNameDataSet = mDataset.get(MY_NAME_DATA_SET_NUM);
+            mBriefDataSet = mDataset.get(MY_BRIEF_DATA_SET_NUM);
+        }
 
         dbHelper = new MyDatabaseHelper(mContext,"TeapotToday.db",null,2);
         db = dbHelper.getWritableDatabase();
@@ -113,6 +117,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     @Override
     public FirstPageRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                       int viewType) {
+
 
 
         // create a new view
@@ -179,7 +184,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         holder.setIsRecyclable(false);
 
 
-
         CardView cvTop = holder.mCardView;
         TextView tvTitle = holder.tvTitle;
         TextView tvContent = holder.tvContent;
@@ -197,10 +201,17 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             cvTop.setAlpha(0);
         } else {
 
-            tvTitle.setText(mNameDataSet.get(position-1));
-            tvContent.setText(mBriefDataSet.get(position-1));
+            if ((null !=mNameDataSet) && (null!=mBriefDataSet)) {
+                tvTitle.setText(mNameDataSet.get(position-1));
+                tvContent.setText(mBriefDataSet.get(position-1));
+            }
 
-            String url = "http://10.0.3.2:8080/mywebapps/" + mImgDataSet.get(position - 1);
+
+            String url = "http://10.0.3.2:8080/mywebapps/content_detail1/shengtao01.jpg";
+            if (null != mImgDataSet) {
+                 url = "http://10.0.3.2:8080/mywebapps/" + mImgDataSet.get(position - 1);
+            }
+
             cvTop.setTag(R.string.url_tag, url);
             ivPot.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -248,6 +259,17 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mImgDataSet.size() + 1;
+
+        if (null != mImgDataSet) {
+            return mImgDataSet.size() + 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    public void refresh (ArrayList<ArrayList<String>> dataset) {
+        mDataset = dataset;
+        notifyDataSetChanged();
     }
 }

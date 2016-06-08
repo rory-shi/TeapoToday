@@ -48,20 +48,22 @@ public class FirstPageFragment extends Fragment {
     private static final int RECEIVE_JSON = 2;
     private static final int HEAD_IMAGES_COUNT = 4;
     private static final int LOAD_MORE = 3;
+    private static final int FIRST_LOAD_COUNT = 12;
+    private static final int LOAD_MORE_REFRESH_COUNT = 5;
 
     private RecyclerView mRecyclerView;
-
+    private LinearLayoutManager mLayoutManager;
     private SwipeRefreshLayout mSrl;
     private ImageView mImageView;
-
+    private FirstPageRecyclerViewAdapter mRVAdapter;
     private Bitmap defaultImage;
 
     private ArrayList<String> headUrl;
 
     private int timer = 0;
     private int lastVisibleItem ;
+    private int countNow = FIRST_LOAD_COUNT;
 
-    private int count = 6;
 
     ArrayList<ArrayList<String>> dataSet;
 
@@ -98,7 +100,7 @@ public class FirstPageFragment extends Fragment {
                 case RECEIVE_JSON:{
                     dataSet = (ArrayList<ArrayList<String>>) msg.obj;
 
-                    FirstPageRecyclerViewAdapter mRVAdapter; mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), dataSet);
+                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), dataSet);
                     mRecyclerView.setAdapter(mRVAdapter);
 
                    // mRVAdapter.refresh(dataSet);
@@ -136,7 +138,7 @@ public class FirstPageFragment extends Fragment {
         //init recycler view
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         dataSet = new ArrayList<>();
@@ -152,7 +154,7 @@ public class FirstPageFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        receiveJsonFromNetwork(true);
+                        receiveJsonFromNetwork(true,countNow);
                         mRecyclerView.invalidate();
 
 
@@ -162,20 +164,29 @@ public class FirstPageFragment extends Fragment {
             }
         });
 
-/*
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+       /* mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
+            public void onScrollStateChanged(final RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
+                FirstPageRecyclerViewAdapter adapter = (FirstPageRecyclerViewAdapter) recyclerView.getAdapter();
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItem + 1 == adapter.getItemCount()) {
+                        && lastVisibleItem + 1 >= adapter.getItemCount()) {
                     mSrl.setRefreshing(true);
-                    Message headMsg = new Message();
-                    headMsg.what = LOAD_MORE;
-                    headMsg.obj =
-                    handler.sendMessage(headMsg);
+                    countNow = countNow + LOAD_MORE_REFRESH_COUNT;
+                    receiveJsonFromNetwork(true, countNow);
+                    adapter.notifyDataSetChanged();
+
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(countNow - LOAD_MORE_REFRESH_COUNT);
+                        }
+                    });
+
+
                 }
             }
 
@@ -195,11 +206,11 @@ public class FirstPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //get json
-        receiveJsonFromNetwork(false);
+        receiveJsonFromNetwork(false,FIRST_LOAD_COUNT);
 
     }
 
-    private void receiveJsonFromNetwork(final boolean refresh) {
+    private void receiveJsonFromNetwork(final boolean refresh, final int count) {
         RequestQueue queue = VolleyController.getInstance(getActivity()).getRequestQueue();
         String url = "http://10.0.3.2:8080/mywebapps/myjson.txt";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
