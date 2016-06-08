@@ -18,11 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -50,6 +46,8 @@ public class FirstPageFragment extends Fragment {
 
     public static final int UPDATE_FIRST_COLUMN = 1;
     private static final int RECEIVE_JSON = 2;
+    private static final int HEAD_IMAGES_COUNT = 4;
+    private static final int LOAD_MORE = 3;
 
     private RecyclerView mRecyclerView;
 
@@ -62,6 +60,10 @@ public class FirstPageFragment extends Fragment {
 
     private int timer = 0;
     private int lastVisibleItem ;
+
+    private int count = 6;
+
+    ArrayList<ArrayList<String>> dataSet;
 
 
     //handler
@@ -94,9 +96,13 @@ public class FirstPageFragment extends Fragment {
                     break;
                 }
                 case RECEIVE_JSON:{
-                    RecyclerView.Adapter mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), (ArrayList<ArrayList<String>>) msg.obj);
+                    dataSet = (ArrayList<ArrayList<String>>) msg.obj;
+
+                    FirstPageRecyclerViewAdapter mRVAdapter; mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), dataSet);
                     mRecyclerView.setAdapter(mRVAdapter);
 
+                   // mRVAdapter.refresh(dataSet);
+                   // mRVAdapter.notifyDataSetChanged();
                     mSrl.setRefreshing(false);
                     break;
                 }
@@ -133,6 +139,9 @@ public class FirstPageFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        dataSet = new ArrayList<>();
+
+
         mSrl.setColorSchemeColors(R.color.colorPrimary);
         mSrl.setProgressViewOffset(false, 100, 100 + (int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
@@ -152,6 +161,31 @@ public class FirstPageFragment extends Fragment {
 
             }
         });
+
+/*
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView,
+                                             int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    mSrl.setRefreshing(true);
+                    Message headMsg = new Message();
+                    headMsg.what = LOAD_MORE;
+                    headMsg.obj =
+                    handler.sendMessage(headMsg);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+            }
+
+        });*/
 
         return view;
     }
@@ -179,9 +213,9 @@ public class FirstPageFragment extends Fragment {
                         Message listMsg = new Message();
                         listMsg.what = RECEIVE_JSON;
                         ArrayList<ArrayList<String>> dataSet =  new ArrayList<>();
-                        dataSet.add(handleResponseWithKey(response, "MyTeaPot"));
-                        dataSet.add(handleResponseWithKey(response, "TeapotName"));
-                        dataSet.add(handleResponseWithKey(response, "TeapotBrief"));
+                        dataSet.add(handleResponseWithKey(response, "MyTeaPot", count));
+                        dataSet.add(handleResponseWithKey(response, "TeapotName", count));
+                        dataSet.add(handleResponseWithKey(response, "TeapotBrief", count));
 
                         listMsg.obj = dataSet;
                         handler.sendMessage(listMsg);
@@ -189,7 +223,7 @@ public class FirstPageFragment extends Fragment {
                         if (!refresh) {
                             Message headMsg = new Message();
                             headMsg.what = UPDATE_FIRST_COLUMN;
-                            headMsg.obj = handleResponseWithKey(response,"HeadImages");
+                            headMsg.obj = handleResponseWithKey(response,"HeadImages", HEAD_IMAGES_COUNT);
                             handler.sendMessage(headMsg);
                         }
 
@@ -220,22 +254,23 @@ public class FirstPageFragment extends Fragment {
         queue.add(stringRequest);
     }
 
-    private ArrayList<String> handleResponseWithKey(String response, String key) {
-        ArrayList<String> myImageDataSet = new ArrayList<>();
+    private ArrayList<String> handleResponseWithKey(String response, String key,int itemCount) {
+        ArrayList<String> myDataSet = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(response);
 
             JSONArray jsonArray = jsonObject.getJSONArray(key);
-            myImageDataSet.clear();
-            for (int i =0; i < jsonArray.length(); i ++) {
-                myImageDataSet.add((String) jsonArray.get(i));
+            myDataSet.clear();
+            int num = itemCount;
+            for (int i =0; i < num; i ++) {
+                myDataSet.add((String) jsonArray.get(i));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return myImageDataSet;
+        return myDataSet;
     }
 
 
