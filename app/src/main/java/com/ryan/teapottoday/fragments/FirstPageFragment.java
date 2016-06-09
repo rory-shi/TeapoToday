@@ -48,8 +48,11 @@ public class FirstPageFragment extends Fragment {
     private static final int RECEIVE_JSON = 2;
     private static final int HEAD_IMAGES_COUNT = 4;
     private static final int LOAD_MORE = 3;
-    private static final int FIRST_LOAD_COUNT = 12;
+    private static final int FIRST_LOAD_COUNT = 14;
     private static final int LOAD_MORE_REFRESH_COUNT = 5;
+
+    private static final String content = "http://10.0.3.2:8080/mywebapps/";
+    //private static final String content = "http://192.168.191.1:8080/mywebapps/";
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -83,7 +86,7 @@ public class FirstPageFragment extends Fragment {
                     animSet.setDuration(10000);
                     animSet.start();
 
-                    String content = "http://10.0.3.2:8080/mywebapps/";
+
                     headUrl = (ArrayList<String>) msg.obj;
 
                     ImageCacheManager.loadImage(getActivity(), content + headUrl.get((timer++) % 4), mImageView, defaultImage, defaultImage);
@@ -212,7 +215,7 @@ public class FirstPageFragment extends Fragment {
 
     private void receiveJsonFromNetwork(final boolean refresh, final int count) {
         RequestQueue queue = VolleyController.getInstance(getActivity()).getRequestQueue();
-        String url = "http://10.0.3.2:8080/mywebapps/myjson.txt";
+        String url = content + "myjson.txt";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String response) {

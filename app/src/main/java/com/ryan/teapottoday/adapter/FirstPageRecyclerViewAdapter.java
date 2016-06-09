@@ -44,6 +44,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     public static final int MY_NAME_DATA_SET_NUM = 1;
     public static final int MY_BRIEF_DATA_SET_NUM = 2;
 
+    private static final String content = "http://10.0.3.2:8080/mywebapps/";
+    //private static final String content = "http://192.168.191.1:8080/mywebapps/";
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -164,12 +167,15 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
                 CardView cardView = (CardView) caller.getParent().getParent();
                 String url = (String) cardView.getTag(R.string.url_tag);
-                Intent intent = new Intent(mContext, ContentActivity.class);
-                intent.putExtra("url",url);
-                if (debug) {
-                    Log.e("url",url);
+                if (url != "null") {
+                    Intent intent = new Intent(mContext, ContentActivity.class);
+                    intent.putExtra("url",url);
+                    if (debug) {
+                        Log.e("url",url);
+                    }
+                    ((Activity)mContext).startActivityForResult(intent, 1);
                 }
-                ((Activity)mContext).startActivityForResult(intent, 1);
+
             }
         });
         return vh;
@@ -192,6 +198,8 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
         ImageView ivPot = holder.ivInCardView;
 
         ImageView ivFav = holder.ivFavorite;
+
+        String url = "";
         if (position == 0) {
 
 //            int dp = DensityUtil.px2dip(mContext,800);
@@ -199,6 +207,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             int px = DensityUtil.dip2px(mContext, 400);
             cvTop.getLayoutParams().height = px;
             cvTop.setAlpha(0);
+
+            url = "null";
+            cvTop.setTag(R.string.url_tag, url);
         } else {
 
             if ((null !=mNameDataSet) && (null!=mBriefDataSet)) {
@@ -206,10 +217,12 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                 tvContent.setText(mBriefDataSet.get(position-1));
             }
 
+            if (!"null".equals(url)) {
+                url = content + "content_detail1/shengtao01.jpg";
+            }
 
-            String url = "http://10.0.3.2:8080/mywebapps/content_detail1/shengtao01.jpg";
             if (null != mImgDataSet) {
-                 url = "http://10.0.3.2:8080/mywebapps/" + mImgDataSet.get(position - 1);
+                 url = content + mImgDataSet.get(position - 1);
             }
 
             cvTop.setTag(R.string.url_tag, url);
