@@ -84,7 +84,6 @@ public class WidgetView extends View {
     private void init() {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);// 软件加速
 
-        topImage = BitmapFactory.decodeResource(getResources(), R.drawable.first01);
 
         paint = new Paint();
         paint.setAntiAlias(true);//反锯齿

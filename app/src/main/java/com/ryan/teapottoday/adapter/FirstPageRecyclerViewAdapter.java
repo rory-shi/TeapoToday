@@ -1,5 +1,6 @@
 package com.ryan.teapottoday.adapter;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,16 +9,23 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.teapottoday.ContentActivity;
+import com.ryan.teapottoday.MyApplication;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
 import com.ryan.teapottoday.model.ImageCacheManager;
@@ -44,8 +52,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     public static final int MY_NAME_DATA_SET_NUM = 1;
     public static final int MY_BRIEF_DATA_SET_NUM = 2;
 
-    private static final String content = "http://10.0.3.2:8080/mywebapps/";
-    //private static final String content = "http://192.168.191.1:8080/mywebapps/";
+    private int lastAnimatedPosition = -1;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -151,6 +158,17 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
                 int row = db.delete("Teapot", "url = ?", new String[]{url});
                 caller.setBackgroundResource(R.drawable.ic_favorite_border);
+
+                Animator animator = ViewAnimationUtils.createCircularReveal(
+                        caller,
+                        caller.getWidth() / 2,
+                        caller.getHeight() / 2,
+                        0,
+                        caller.getWidth());
+                animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                animator.setDuration(1000);
+                animator.start();
+
                 if (row == 0) {
                     ContentValues values = new ContentValues();
                     values.put("url",url);
@@ -173,7 +191,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                     if (debug) {
                         Log.e("url",url);
                     }
-                    ((Activity)mContext).startActivityForResult(intent, 1);
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext, cardView.findViewById(R.id.iv_in_cv), mContext.getString(R.string.transition_first_img));
+                    //((Activity) mContext).startActivityForResult(intent, 1);
+                    ActivityCompat.startActivityForResult((Activity) mContext, intent, 1, optionsCompat.toBundle());
                 }
 
             }
@@ -185,6 +205,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        runEnterAnimation(holder.itemView, position);
+
 
         //暴力解决了复用导致的界面布局混乱，但是牺牲了效率
         holder.setIsRecyclable(false);
@@ -218,11 +241,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             }
 
             if (!"null".equals(url)) {
-                url = content + "content_detail1/shengtao01.jpg";
+                url = MyApplication.CONTENT + "content_detail1/shengtao01.jpg";
             }
 
             if (null != mImgDataSet) {
-                 url = content + mImgDataSet.get(position - 1);
+                 url = MyApplication.CONTENT + mImgDataSet.get(position - 1);
             }
 
             cvTop.setTag(R.string.url_tag, url);
@@ -258,6 +281,23 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
             }
         }
 
+    }
+
+    private void runEnterAnimation(View view, int position) {
+        if (position!=1) {
+            return;
+        }
+
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            view.setTranslationY(800);
+            view.animate()
+                    .translationY(0)
+                    .setStartDelay(100 * position)
+                    .setInterpolator(new DecelerateInterpolator(3.f))
+                    .setDuration(700)
+                    .start();
+        }
     }
 
     private void setImageView(String url, ImageView ivPot, int position) {

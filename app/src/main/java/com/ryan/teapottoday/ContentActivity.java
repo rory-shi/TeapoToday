@@ -1,5 +1,6 @@
 package com.ryan.teapottoday;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -14,8 +15,11 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -54,12 +58,12 @@ public class ContentActivity extends Activity {
     private String[] arrs;
 
 
-    private String contentDir = "http://10.0.3.2:8080/mywebapps/content_detail2";
+    private String contentDir = MyApplication.CONTENT + "content_detail2";
 
     @Bind(R.id.content_share)
-    Button btnShare;
+    ImageButton btnShare;
     @Bind(R.id.btn_back)
-    Button btnBack;
+    ImageButton btnBack;
     @Bind(R.id.tv_dirt_intro)
     TextView tvDirt;
     @Bind(R.id.tv_teapot_intro)
@@ -77,7 +81,7 @@ public class ContentActivity extends Activity {
     @Bind(R.id.sv_content)
     PullToZoomScrollView svContent;
     @Bind(R.id.btn_fav)
-    Button btnFav;
+    ImageButton btnFav;
     @Bind(R.id.detail_round_img_artisan)
     SelectableRoundedImageView imgArtisan;
     @Bind(R.id.detail_round_img_dirt)
@@ -94,7 +98,6 @@ public class ContentActivity extends Activity {
                     if (msg.obj instanceof  ArrayList) {
                         teapotImgsList = (ArrayList<String>) msg.obj;
                     }
-
                     String artImg = teapotImgsList.get(0);
                     String dirtImg = teapotImgsList.get(1);
                     String teapotIntro = teapotImgsList.get(2);
@@ -182,13 +185,25 @@ public class ContentActivity extends Activity {
             @Override
             public void onClick(View v) {
                 int row = db.delete("Teapot", "url = ?", new String[]{url});
-                v.setBackgroundResource(R.drawable.ic_favorite_border_white);
+                ImageButton iBtn = (ImageButton) v;
+                iBtn.setBackgroundResource(R.drawable.ic_favorite_border_white);
                 if (row == 0) {
                     ContentValues values = new ContentValues();
-                    values.put("url",url);
+                    values.put("url", url);
                     db.insert("Teapot", null, values);
-                    v.setBackgroundResource(R.drawable.ic_favorite);
+                    iBtn.setBackgroundResource(R.drawable.ic_favorite);
                 }
+
+
+                Animator animator = ViewAnimationUtils.createCircularReveal(
+                        iBtn,
+                        iBtn.getWidth() / 2,
+                        iBtn.getHeight() / 2,
+                        0,
+                        iBtn.getWidth());
+                animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                animator.setDuration(1000);
+                animator.start();
             }
         });
 
@@ -207,11 +222,11 @@ public class ContentActivity extends Activity {
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
         oks.setTitle("分享");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
+        oks.setText("从TeapotToday发现一只超好看的紫砂壶，分享给大家交流学习。");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-       // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        //oks.setImagePath("/storage/test.jpg");//确保SDcard下面存在此张图片
 
-// 启动分享GUI
+        // 启动分享GUI
         oks.show(this);
     }
 

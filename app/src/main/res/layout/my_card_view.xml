@@ -17,6 +17,7 @@
         android:elevation="0dp">
         <ImageView
             android:id="@+id/iv_in_cv"
+            android:transitionName="@string/transition_first_img"
             android:layout_width="match_parent"
             android:layout_height="260dp"
             android:src="@drawable/default_img"

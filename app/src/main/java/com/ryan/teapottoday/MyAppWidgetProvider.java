@@ -1,18 +1,13 @@
 package com.ryan.teapottoday;
 
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.os.SystemClock;
 import android.widget.RemoteViews;
 
-import com.ryan.teapottoday.diyView.CustomFourImageView;
 import com.ryan.teapottoday.diyView.WidgetView;
 
 /**
@@ -49,13 +44,7 @@ public class MyAppWidgetProvider extends android.appwidget.AppWidgetProvider {
             }).start();
         }*/
 
-        CustomFourImageView myView = new CustomFourImageView(context);
-        myView.measure(110, 110);
-        myView.layout(0, 0, 150, 150);
-        myView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = myView.getDrawingCache();
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
-        remoteViews.setImageViewBitmap(R.id.iv_widget,bitmap);
+
     }
 
     @Override

@@ -93,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 1500);
     }
 
 

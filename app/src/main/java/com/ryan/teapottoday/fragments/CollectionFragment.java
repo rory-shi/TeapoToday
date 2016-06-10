@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
@@ -106,7 +108,13 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                 if (BuildConfig.DEBUG) {
                     Log.e("url",url);
                 }
-                getActivity().startActivityForResult(intent, 1);
+                view.setTransitionName(getResources().getString(R.string.transition_first_img));
+
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, getActivity().getString(R.string.transition_first_img));
+                //((Activity) mContext).startActivityForResult(intent, 1);
+                ActivityCompat.startActivityForResult(getActivity(), intent, 1, optionsCompat.toBundle());
+
+                //getActivity().startActivityForResult(intent, 1);
 
 //                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
 //                ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, defaultImage);

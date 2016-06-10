@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
+import com.ryan.teapottoday.MyApplication;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.adapter.FirstPageRecyclerViewAdapter;
 import com.ryan.teapottoday.model.ImageCacheManager;
@@ -51,8 +52,6 @@ public class FirstPageFragment extends Fragment {
     private static final int FIRST_LOAD_COUNT = 14;
     private static final int LOAD_MORE_REFRESH_COUNT = 5;
 
-    private static final String content = "http://10.0.3.2:8080/mywebapps/";
-    //private static final String content = "http://192.168.191.1:8080/mywebapps/";
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -89,7 +88,7 @@ public class FirstPageFragment extends Fragment {
 
                     headUrl = (ArrayList<String>) msg.obj;
 
-                    ImageCacheManager.loadImage(getActivity(), content + headUrl.get((timer++) % 4), mImageView, defaultImage, defaultImage);
+                    ImageCacheManager.loadImage(getActivity(), MyApplication.CONTENT + headUrl.get((timer++) % 4), mImageView, defaultImage, defaultImage);
 
 //                    handler.sendEmptyMessageDelayed(UPDATE_FIRST_COLUMN,10000);
 
@@ -215,7 +214,7 @@ public class FirstPageFragment extends Fragment {
 
     private void receiveJsonFromNetwork(final boolean refresh, final int count) {
         RequestQueue queue = VolleyController.getInstance(getActivity()).getRequestQueue();
-        String url = content + "myjson.txt";
+        String url = MyApplication.CONTENT + "myjson.txt";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(final String response) {

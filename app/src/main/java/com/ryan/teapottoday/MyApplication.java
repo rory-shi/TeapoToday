@@ -8,10 +8,14 @@ import android.content.Context;
  */
 public class MyApplication extends Application {
     private static Context context;
+    //private static final String content = "http://10.0.3.2:8080/mywebapps/";
+    public static final String CONTENT = "http://192.168.191.1:8080/mywebapps/";
+
 
     @Override
     public void onCreate() {
         context = getApplicationContext();
+        super.onCreate();
     }
 
     public static Context getContextObject() {

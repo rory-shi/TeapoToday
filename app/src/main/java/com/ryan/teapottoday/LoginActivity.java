@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 1500);
     }
 
     private boolean loginSuccess(String email,String password) {

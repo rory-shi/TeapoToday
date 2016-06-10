@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +24,8 @@ import com.ryan.teapottoday.fragments.HistoryFragment;
 import com.ryan.teapottoday.fragments.ProductionFragment;
 import com.ryan.teapottoday.fragments.SettingsFragment;
 import com.ryan.teapottoday.utils.PreferenceUtils;
+
+import io.github.xhinliang.lunarcalendar.Main;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -91,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                /*v.setTransitionName(getResources().getString(R.string.transition_logo_img));
+
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, v, MainActivity.this.getString(R.string.transition_logo_img));
+                ActivityCompat.startActivity(MainActivity.this , intent, optionsCompat.toBundle());*/
                 startActivity(intent);
             }
         });

@@ -1,5 +1,6 @@
 package com.ryan.teapottoday.adapter;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -16,9 +17,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -99,8 +103,21 @@ public class MyVPContentPagerAdapter extends PagerAdapter {
                     dialogWindow.setGravity(Gravity.CENTER);
                     lp.width = 500; // 宽度
                     lp.height = 500; // 高度
+
                     dialogWindow.setAttributes(lp);
 
+                    /*Animator animator = ViewAnimationUtils.createCircularReveal(
+                            dialogWindow,
+                            0,
+                            0,
+                            0,
+                            (float) Math.hypot(lp.x, lp.y));
+                    animator.setInterpolator(new AccelerateInterpolator());
+                    animator.setDuration(2000);
+                    animator.start();
+                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animator.setDuration(2000);
+                    animator.start();*/
 
                     dialog.show();
                     // 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮

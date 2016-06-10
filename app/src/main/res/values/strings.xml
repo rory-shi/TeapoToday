@@ -11,4 +11,6 @@
     <string name="select_none">全不选</string>
     <string name="url_tag">23232323</string>
     <string name="handle_response">response</string>
+    <string name="transition_first_img">first_fragment_transition_img</string>
+    <string name="transition_logo_img">transition_logo_img</string>
 </resources>
