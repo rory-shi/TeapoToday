@@ -383,8 +383,8 @@ public class ContentActivity extends Activity {
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("refresh", true);
-        setResult(Activity.RESULT_OK,returnIntent);
-        finish();
-        //super.onBackPressed();
+        setResult(Activity.RESULT_OK, returnIntent);
+        super.onBackPressed();
+
     }
 }

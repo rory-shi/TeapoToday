@@ -61,21 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initEvent();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                boolean refresh = data.getExtras().getBoolean("refresh");
-                if (refresh) {
-                    //Toast.makeText(this, "需要刷新页面", Toast.LENGTH_SHORT).show();
-                    initView();
-                    initEvent();
-                }
-            }
-        }
-    }
-
     private void initDatabase() {
        /* dbHelper = new MyDatabaseHelper(this, "Teapot.db", null, 1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();

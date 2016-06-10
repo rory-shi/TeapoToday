@@ -47,10 +47,13 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
         </receiver>
+        <service android:name=".WidgetService"/>
+
 
         <activity android:name=".CalendarActivity"></activity>
         <activity android:name=".LoginActivity" android:theme="@style/AppTheme" />
         <activity android:name=".SignupActivity" android:theme="@style/AppTheme" />
+
 
 
         <activity

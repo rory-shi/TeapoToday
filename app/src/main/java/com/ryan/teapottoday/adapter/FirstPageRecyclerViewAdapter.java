@@ -2,6 +2,7 @@ package com.ryan.teapottoday.adapter;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
@@ -28,10 +31,12 @@ import com.ryan.teapottoday.ContentActivity;
 import com.ryan.teapottoday.MyApplication;
 import com.ryan.teapottoday.R;
 import com.ryan.teapottoday.database.MyDatabaseHelper;
+import com.ryan.teapottoday.fragments.FirstPageFragment;
 import com.ryan.teapottoday.model.ImageCacheManager;
 import com.ryan.teapottoday.utils.DateUtils;
 import com.ryan.teapottoday.utils.DensityUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +47,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     private ArrayList<String> mNameDataSet;
     private ArrayList<String> mBriefDataSet;
     private Context mContext;
+    private FirstPageFragment mFragment;
     ArrayList<ArrayList<String>> mDataset;
 
     private MyDatabaseHelper dbHelper;
@@ -109,9 +115,11 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FirstPageRecyclerViewAdapter(Activity context, ArrayList<ArrayList<String>> myDataset) {
+    public FirstPageRecyclerViewAdapter(Activity context, FirstPageFragment firstPageFragment, ArrayList<ArrayList<String>> myDataset) {
         mContext = context;
         mDataset = myDataset;
+
+        mFragment = firstPageFragment;
 
         if (0!= mDataset.size()) {
             mImgDataSet = mDataset.get(MY_IMG_DATA_SET_NUM);
@@ -192,8 +200,8 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                         Log.e("url",url);
                     }
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext, cardView.findViewById(R.id.iv_in_cv), mContext.getString(R.string.transition_first_img));
-                    //((Activity) mContext).startActivityForResult(intent, 1);
-                    ActivityCompat.startActivityForResult((Activity) mContext, intent, 1, optionsCompat.toBundle());
+
+                    ((Activity) mContext).startActivityFromFragment(mFragment,intent, 1, optionsCompat.toBundle());
                 }
 
             }
@@ -206,8 +214,9 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        runEnterAnimation(holder.itemView, position);
-
+        if (position==1) {
+            runEnterAnimation(holder.itemView, position);
+        }
 
         //暴力解决了复用导致的界面布局混乱，但是牺牲了效率
         holder.setIsRecyclable(false);
@@ -284,9 +293,6 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
     }
 
     private void runEnterAnimation(View view, int position) {
-        if (position!=1) {
-            return;
-        }
 
         if (position > lastAnimatedPosition) {
             lastAnimatedPosition = position;

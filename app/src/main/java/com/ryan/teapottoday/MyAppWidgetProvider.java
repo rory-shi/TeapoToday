@@ -2,6 +2,7 @@ package com.ryan.teapottoday;
 
 
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,6 +49,18 @@ public class MyAppWidgetProvider extends android.appwidget.AppWidgetProvider {
     }
 
     @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        context.startService(new Intent(context,WidgetService.class));
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+        context.stopService(new Intent(context,WidgetService.class));
+    }
+
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         final int counter = appWidgetIds.length;
@@ -59,20 +72,28 @@ public class MyAppWidgetProvider extends android.appwidget.AppWidgetProvider {
     }
 
     private void onWidgetUpdate(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+
+        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
+        rv.setTextViewText(R.id.Description1TextView, "sdfsd");
+        rv.setTextViewText(R.id.Description2TextView, "sdfsd");
+        rv.setTextViewText(R.id.Description3TextView, "sdfsd");
+        rv.setTextViewText(R.id.Description4TextView, "sdfsd");
+        appWidgetManager.updateAppWidget(appWidgetId,rv);
+
         /*RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
         Intent intentClick = new Intent();
         intentClick.setAction(CLICK_ACTION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentClick,0);
         remoteViews.setOnClickPendingIntent(R.id.iv_widget,pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetId,remoteViews);*/
-        WidgetView myView = new WidgetView(context);
+        /*WidgetView myView = new WidgetView(context);
         myView.measure(250, 250);
         myView.layout(0, 0, 250, 250);
         myView.setDrawingCacheEnabled(true);
         Bitmap bitmap = myView.getDrawingCache();
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
         remoteViews.setImageViewBitmap(R.id.iv_widget, bitmap);
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);*/
     }
 
     private Bitmap rotateBitmap(Context context, Bitmap srcbBitmap, float degree) {

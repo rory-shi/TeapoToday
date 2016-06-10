@@ -105,41 +105,15 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
 
                 Intent intent = new Intent(getActivity(), ContentActivity.class);
                 intent.putExtra("url", url);
+//                intent.putExtra("isFromCollection", true);
                 if (BuildConfig.DEBUG) {
                     Log.e("url",url);
                 }
                 view.setTransitionName(getResources().getString(R.string.transition_first_img));
 
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, getActivity().getString(R.string.transition_first_img));
-                //((Activity) mContext).startActivityForResult(intent, 1);
-                ActivityCompat.startActivityForResult(getActivity(), intent, 1, optionsCompat.toBundle());
+                getActivity().startActivityFromFragment(CollectionFragment.this, intent, 1, optionsCompat.toBundle());
 
-                //getActivity().startActivityForResult(intent, 1);
-
-//                Bitmap defaultImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.default_img);
-//                ImageCacheManager.loadImage(getActivity(), url, ivContentDetail, defaultImage, defaultImage);
-//
-//                final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
-//
-//                //ImageView img = (ImageView) imgEntryView.findViewById(R.id.demo);
-//                //imageDownloader.download("图片地址", img); // 这个是加载网络图片的，可以是自己的图片设置方法
-//                dialog.setView(imgEntryView); // 自定义dialog
-//
-//                Window dialogWindow = dialog.getWindow();
-//                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-//                dialogWindow.setGravity(Gravity.CENTER);
-//                lp.width = getActivity().getResources().getDisplayMetrics().widthPixels+200; // 宽度
-//                //lp.height = 500; // 高度
-//                dialogWindow.setAttributes(lp);
-//
-//
-//                dialog.show();
-//                // 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
-//                imgEntryView.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View paramView) {
-//                        dialog.cancel();
-//                    }
-//                });
             }
         });
 
@@ -148,6 +122,20 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //Toast.makeText(getActivity(),"Get the result.",Toast.LENGTH_SHORT).show();
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                boolean refresh = data.getExtras().getBoolean("refresh");
+                if (refresh) {
+                    mGridView.invalidate();
+                    selectNone();
+                }
+            }
+        }
+    }
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -198,9 +186,9 @@ public class CollectionFragment extends Fragment implements AbsListView.MultiCho
                         urls.remove(i);
                     }
                 }
-
-                mGridView.invalidate();
                 selectNone();
+                mGridView.invalidate();
+
                 break;
 
         }

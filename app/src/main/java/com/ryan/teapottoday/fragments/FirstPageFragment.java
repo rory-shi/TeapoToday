@@ -2,7 +2,9 @@ package com.ryan.teapottoday.fragments;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -102,7 +104,8 @@ public class FirstPageFragment extends Fragment {
                 case RECEIVE_JSON:{
                     dataSet = (ArrayList<ArrayList<String>>) msg.obj;
 
-                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(), dataSet);
+                    mRVAdapter = new FirstPageRecyclerViewAdapter(getActivity(),FirstPageFragment.this, dataSet);
+
                     mRecyclerView.setAdapter(mRVAdapter);
 
                    // mRVAdapter.refresh(dataSet);
@@ -121,6 +124,19 @@ public class FirstPageFragment extends Fragment {
     };
 
     public FirstPageFragment() {}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                boolean refresh = data.getExtras().getBoolean("refresh");
+                if (refresh) {
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        }
+    }
 
     @Nullable
     @Override
