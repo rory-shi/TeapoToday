@@ -288,6 +288,7 @@ public class FirstPageRecyclerViewAdapter extends RecyclerView.Adapter<FirstPage
                 tvContent.setText("农历" + DateUtils.getToday("lunar"));
 
             }
+
         }
 
     }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="0dp"
+    android:elevation="10dp"
     android:orientation="vertical">
 
     <include layout="@layout/content_title_bar" />
@@ -52,7 +52,6 @@
                     android:id="@+id/tv_dirt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:elevation="4dp"
                     android:gravity="center_vertical"
                     android:text="泥料"
                     android:textSize="25sp"
@@ -65,7 +64,6 @@
                     android:layout_height="70dp"
                     android:layout_marginLeft="80dp"
                     android:layout_marginTop="10dp"
-                    android:elevation="4dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/shengtao_dirt"
                     app:sriv_border_color="#ffffff"

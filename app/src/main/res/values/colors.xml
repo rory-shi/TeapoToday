@@ -2,8 +2,11 @@
 <resources>
     <color name="colorPrimary">#90cad8</color>
     <color name="colorPrimaryLight">#8fd0db</color>
-    <color name="colorPrimaryDark">#90cad8</color>
+    <color name="colorPrimaryDark">#448393</color>
     <color name="colorAccent">#d49086</color>
     <color name="colorBackground">#d18e86</color>
     <color name="colorToolBar">#2d6d84</color>
+
+    <color name="gray">#d49086</color>
+    <color name="white">#2d6d84</color>
 </resources>
